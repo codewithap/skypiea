@@ -106,7 +106,7 @@ setInterval(next, 8000);
 
 /// tranding anime ///
 let cards = document.querySelector(".trending .cards");
-fetch('https://aniapi-eight.vercel.app/api/topAnimes?type=bypopularity&page=1')
+fetch('https://aniapi-eight.vercel.app/api/topAnimes?type=favorite&page=1')
   .then(response => {
     return response.json();
   }).then(data => {
@@ -128,8 +128,68 @@ fetch('https://aniapi-eight.vercel.app/api/topAnimes?type=bypopularity&page=1')
     console.error(error)
   });
 
+  
 
+let trandingScrollCount = 0
+function nextTrending(){
+    let x = 9 - Math.floor(document.body.offsetWidth / 195)
+    if(trandingScrollCount > x){
+      trandingScrollCount = x
+  }
+  
+  trandingScrollCount += 1;
+  cards.style.transform = `translateX(-${196*trandingScrollCount}px)`;
+}
 
 function prevTrending(){
-  cards.scrollTo(185, 0);
+  if(trandingScrollCount < 1){
+    trandingScrollCount = 1
+  }
+  trandingScrollCount -= 1;
+  cards.style.transform = `translateX(-${196*trandingScrollCount}px)`;
+}
+
+/// tranding anime ///
+let popularCards = document.querySelector(".popular .cards");
+fetch('https://aniapi-eight.vercel.app/api/topAnimes?type=bypopularity&page=1')
+  .then(response => {
+    return response.json();
+  }).then(data => {
+    console.log(data);
+    let SlidesList = data['items'];
+    for (let i = 0; i < 10; i++) {
+      popularCards.innerHTML += `
+      <div class="card fx" style="transform: translateX(${i}px)">
+  <div class="rank">#${i+1}</div>
+    <div class="image">
+      <div class="card_bg2"></div>
+      <div class="card_bg" style="background-image: url('${SlidesList[i]['imgs']['large']}');"></div>
+      <img src="${SlidesList[i]['imgs']['large']}" alt="${SlidesList[i]['title']}">
+    </div>
+  <div class="card-title">${SlidesList[i]['title']}</div>
+</div>`;
+    }
+  }).catch(error => {
+    console.error(error)
+  });
+
+  
+
+let popularScrollCount = 0
+function nextPopular(){
+    let x = 9 - Math.floor(document.body.offsetWidth / 195)
+    if(popularScrollCount > x){
+      popularScrollCount = x
+  }
+  
+  popularScrollCount += 1;
+  popularCards.style.transform = `translateX(-${196*popularScrollCount}px)`;
+}
+
+function prevPopular(){
+  if(popularScrollCount < 1){
+    popularScrollCount = 1
+  }
+  popularScrollCount -= 1;
+  popularCards.style.transform = `translateX(-${196*popularScrollCount}px)`;
 }

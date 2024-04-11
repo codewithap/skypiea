@@ -121,8 +121,17 @@
     padding: 10px;
     padding-right: 14px;
     margin: 5px;
-    background-color: #8c07f94d;
+    background-color: #8c07f98a;
     border-radius: 50px;
     font-weight: bolder;
     backdrop-filter: blur(4px);
 }/* __________________________________ */
+
+.btnTransparent{
+    height: 40%;
+    backdrop-filter: blur(3px);
+    background-color: #201f31e0;
+    margin: 0 0 0 13px;
+    border: none;
+    color: #fefefe;
+}

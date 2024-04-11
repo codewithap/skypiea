@@ -1,5 +1,5 @@
 body{
-  background-color: #201f31;
+  background-color: #101019;
 }
 
 #body{
@@ -16,7 +16,7 @@ display: none;
 }
 
 .nav-bar{
-  background-color: #1110209d;
+  background-color: #111020d7;
   padding: 10px;
   justify-content: space-between;
   z-index: 1000;
@@ -173,7 +173,7 @@ display: none;
   font-weight: bold;
   width: 45px;
   height: 45px;
-  background-color: #00000056;
+  background-color: #201f31bb;
   right: 10px;
   backdrop-filter: blur(4px);
   border: 0.2px solid #4a4a4a5c;
@@ -250,7 +250,50 @@ overflow: hidden;
 text-overflow: ellipsis;
 }
 
-@media (min-width: 700px) {
+.trending h2{
+  color: #9749fe;
+  font-weight: bolder;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.trending h2 a{
+  color: #f9f4ff;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.trending h2 a:hover{
+  color: #498bfe;
+}
+
+.trending .cards{
+  display: flex;
+  overflow: visible auto;
+  padding: 15px 10px;
+  transition: 100ms;
+  /* width: 1960px; */
+}
+
+.trending .button{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 280px;
+  width: 100vw;
+  position: absolute;
+  z-index: 102;
+  transform: translate(calc(100vw - 70px), 15px);
+  visibility: hidden;
+}
+
+.trending .button button{
+  width: 50px;
+}
+
+@media (min-width: 600px) {
   .slideShow{
       height: 400px;
   }
@@ -262,6 +305,14 @@ text-overflow: ellipsis;
   
   .card-content img{
     width: 290px;
+  }
+
+  .trending .button{
+    visibility: visible;
+  }
+
+  .trending .cards{
+    width: 1985px;
   }
 }
 
@@ -275,17 +326,3 @@ text-overflow: ellipsis;
   }
 
 }
-
-.trending h2{
-  color: #9749fe;
-  font-weight: bolder;
-  padding: 0 20px;
-}
-
-.trending .cards{
-  display: flex;
-  overflow: visible auto;
-  padding: 15px 10px;
-  transition: 100ms;
-}
-
