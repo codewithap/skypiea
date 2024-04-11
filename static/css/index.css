@@ -51,11 +51,67 @@ display: none;
   width: 0;
   overflow: hidden;
   position: fixed;
-  background-color: rgba(17, 17, 17, 0.62);
+  background-color: #101019cc;
   backdrop-filter: blur(4px);
   height: 100%;
   transition: 0.2s;
   z-index: 9999;
+}
+
+.slideBarOpenBG{
+  z-index: 999;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #00000079;
+  backdrop-filter: blur(4px);
+  display: none;
+}
+
+.close_menu{
+  width: 100%;
+}
+
+.close_menu button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  background-color: #a903d75c;
+  color: #fff;
+  border: none;
+  border-bottom: 0.1px solid #a903d7;
+  width: 100%;
+}
+
+.sidebar_menu-links{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-top: .3px solid #6262625a;
+  margin-top: 30px;
+  
+}
+
+.sidebar_menu-btn{
+  border: none;
+  border-bottom: .3px solid #4a4a4a81;
+  width: 100%;
+  padding: 15px 0;
+  text-align: center;
+  background: transparent;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fff;
+  cursor: pointer;
+  
+}
+
+.sidebar_menu-btn:hover{
+  color: #b204e3;
+  transition-duration: 100ms;
 }
 
 /* slide show css */
@@ -282,15 +338,16 @@ text-overflow: ellipsis;
   justify-content: center;
   flex-direction: column;
   height: 280px;
-  width: 100vw;
+  
   position: absolute;
   z-index: 102;
-  transform: translate(calc(100vw - 70px), 15px);
+  transform: translate(calc(100vw - 65px), 15px);
   visibility: hidden;
 }
 
 .trending .button button{
   width: 50px;
+  height: 45%;
 }
 
 @media (min-width: 600px) {

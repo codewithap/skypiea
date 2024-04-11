@@ -20,15 +20,18 @@ fetch('url')
 let closeBtn = document.querySelector(".close_menu button");
 let openBtn = document.querySelector(".nav_title .sidebar");
 let sidebar_menu = document.querySelector(".sidebar_menu");
+let slideBarOpenBG = document.querySelector(".slideBarOpenBG");
 let opened = false;
 function openCloseNav() {
   if (opened) {
     opened = false;
     sidebar_menu.style.width = "0";
+    slideBarOpenBG.style.display = "none";
   }
   else if (!opened) {
     opened = true;
     sidebar_menu.style.width = "300px";
+    slideBarOpenBG.style.display = "block";
   }
 }
 openBtn.addEventListener("click", openCloseNav);
@@ -149,7 +152,7 @@ function prevTrending(){
   cards.style.transform = `translateX(-${196*trandingScrollCount}px)`;
 }
 
-/// tranding anime ///
+/// populer anime ///
 let popularCards = document.querySelector(".popular .cards");
 fetch('https://aniapi-eight.vercel.app/api/topAnimes?type=bypopularity&page=1')
   .then(response => {
@@ -172,8 +175,6 @@ fetch('https://aniapi-eight.vercel.app/api/topAnimes?type=bypopularity&page=1')
   }).catch(error => {
     console.error(error)
   });
-
-  
 
 let popularScrollCount = 0
 function nextPopular(){
