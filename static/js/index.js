@@ -1,20 +1,3 @@
-////////////////////////////////////
-/*  
-
-fetch('url')
-  .then(response => {
-    return response.json();
-  }).then(data => {
-    console.log(data);
-  }).catch(error => {
-    console.error(error)
-  });
-
-*/
-///////////////////////////////////////
-
-
-
 
 // navbar openClose
 let closeBtn = document.querySelector(".close_menu button");
@@ -194,3 +177,157 @@ function prevPopular(){
   popularScrollCount -= 1;
   popularCards.style.transform = `translateX(-${196*popularScrollCount}px)`;
 }
+
+
+
+let airing = document.querySelector(".airing .content");
+fetch('https://aniapi-eight.vercel.app/api/topAnimes?type=airing&page=1')
+  .then(response => {
+    return response.json();
+  }).then(data => {
+    let list = data['items'];
+    console.log(list)
+    for (let i = 0; i < 9; i++) {
+      
+    let imgUrl = list[i]["imgs"]["small"];
+    let title = list[i]["title"];
+    let type = list[i]["otherInfo"].split("\n")[0].split("(")[0];
+    let epNo = list[i]["otherInfo"].split("\n")[0].split("(")[1].replace(")","");
+    let score = list[i]["score"];
+    airing.innerHTML += `
+    <div class="featured-anime-card">
+    <img src="${imgUrl}" alt="One Piece">
+    <div class="details">
+        <strong class="featured-anime-card_name">
+            ${title}
+        </strong>
+        <div class="featured-anime-card_otherInfo">
+            <span class="ep_no fx fx-center">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m160-800 65 130q7 14 20 22t28 8q30 0 46-25.5t2-52.5l-41-82h80l65 130q7 14 20 22t28 8q30 0 46-25.5t2-52.5l-41-82h80l65 130q7 14 20 22t28 8q30 0 46-25.5t2-52.5l-41-82h120q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800Z"/></svg> ${epNo}</span>
+            <span class="dot"><svg style="fill: #fff;" xmlns="http://www.w3.org/2000/svg" height="10" viewBox="0 -960 960 960" width="10"><path d="M480-200q-117 0-198.5-81.5T200-480q0-117 81.5-198.5T480-760q117 0 198.5 81.5T760-480q0 117-81.5 198.5T480-200Z"/></svg></span>
+                <span class="rating fx fx-center"><svg style="fill: #FFD700 " xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-269 314-169q-11 7-23 6t-21-8q-9-7-14-17.5t-2-23.5l44-189-147-127q-10-9-12.5-20.5T140-571q4-11 12-18t22-9l194-17 75-178q5-12 15.5-18t21.5-6q11 0 21.5 6t15.5 18l75 178 194 17q14 2 22 9t12 18q4 11 1.5 22.5T809-528L662-401l44 189q3 13-2 23.5T690-171q-9 7-21 8t-23-6L480-269Z"/></svg> ${score}</span>
+            <span class="dot">
+                <svg style="fill: #fff;" xmlns="http://www.w3.org/2000/svg" height="10" viewBox="0 -960 960 960" width="10"><path d="M480-200q-117 0-198.5-81.5T200-480q0-117 81.5-198.5T480-760q117 0 198.5 81.5T760-480q0 117-81.5 198.5T480-200Z"/></svg></span>
+            <span class="type">${type}</span>
+        </div>
+    </div>
+</div>
+    `;
+    }
+  }).catch(error => {
+    console.error(error)
+  });
+
+let upcoming = document.querySelector(".upcoming .content");
+fetch('https://aniapi-eight.vercel.app/api/topAnimes?type=upcoming&page=1')
+  .then(response => {
+    return response.json();
+  }).then(data => {
+    let list = data['items'];
+    console.log(list)
+    for (let i = 0; i < 9; i++) {
+      
+    let imgUrl = list[i]["imgs"]["small"];
+    let title = list[i]["title"];
+    let type = list[i]["otherInfo"].split("\n")[0].split("(")[0];
+    let epNo = list[i]["otherInfo"].split("\n")[0].split("(")[1].replace(")","");
+    let score = list[i]["score"];
+    upcoming.innerHTML += `
+    <div class="featured-anime-card">
+    <img src="${imgUrl}" alt="One Piece">
+    <div class="details">
+        <strong class="featured-anime-card_name">
+            ${title}
+        </strong>
+        <div class="featured-anime-card_otherInfo">
+            <span class="ep_no fx fx-center">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m160-800 65 130q7 14 20 22t28 8q30 0 46-25.5t2-52.5l-41-82h80l65 130q7 14 20 22t28 8q30 0 46-25.5t2-52.5l-41-82h80l65 130q7 14 20 22t28 8q30 0 46-25.5t2-52.5l-41-82h120q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800Z"/></svg> ${epNo}</span>
+            <span class="dot"><svg style="fill: #fff;" xmlns="http://www.w3.org/2000/svg" height="10" viewBox="0 -960 960 960" width="10"><path d="M480-200q-117 0-198.5-81.5T200-480q0-117 81.5-198.5T480-760q117 0 198.5 81.5T760-480q0 117-81.5 198.5T480-200Z"/></svg></span>
+                <span class="rating fx fx-center"><svg style="fill: #FFD700 " xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-269 314-169q-11 7-23 6t-21-8q-9-7-14-17.5t-2-23.5l44-189-147-127q-10-9-12.5-20.5T140-571q4-11 12-18t22-9l194-17 75-178q5-12 15.5-18t21.5-6q11 0 21.5 6t15.5 18l75 178 194 17q14 2 22 9t12 18q4 11 1.5 22.5T809-528L662-401l44 189q3 13-2 23.5T690-171q-9 7-21 8t-23-6L480-269Z"/></svg> ${score}</span>
+            <span class="dot">
+                <svg style="fill: #fff;" xmlns="http://www.w3.org/2000/svg" height="10" viewBox="0 -960 960 960" width="10"><path d="M480-200q-117 0-198.5-81.5T200-480q0-117 81.5-198.5T480-760q117 0 198.5 81.5T760-480q0 117-81.5 198.5T480-200Z"/></svg></span>
+            <span class="type">${type}</span>
+        </div>
+    </div>
+</div>
+    `;
+    }
+  }).catch(error => {
+    console.error(error)
+  });
+
+  let movie = document.querySelector(".movies .content");
+fetch('https://aniapi-eight.vercel.app/api/topAnimes?type=movie&page=1')
+  .then(response => {
+    return response.json();
+  }).then(data => {
+    let list = data['items'];
+    console.log(list)
+    for (let i = 0; i < 9; i++) {
+      
+    let imgUrl = list[i]["imgs"]["small"];
+    let title = list[i]["title"];
+    let type = list[i]["otherInfo"].split("\n")[0].split("(")[0];
+    let epNo = list[i]["otherInfo"].split("\n")[0].split("(")[1].replace(")","");
+    let score = list[i]["score"];
+    movie.innerHTML += `
+    <div class="featured-anime-card">
+    <img src="${imgUrl}" alt="One Piece">
+    <div class="details">
+        <strong class="featured-anime-card_name">
+            ${title}
+        </strong>
+        <div class="featured-anime-card_otherInfo">
+            <span class="ep_no fx fx-center">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m160-800 65 130q7 14 20 22t28 8q30 0 46-25.5t2-52.5l-41-82h80l65 130q7 14 20 22t28 8q30 0 46-25.5t2-52.5l-41-82h80l65 130q7 14 20 22t28 8q30 0 46-25.5t2-52.5l-41-82h120q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800Z"/></svg> ${epNo}</span>
+            <span class="dot"><svg style="fill: #fff;" xmlns="http://www.w3.org/2000/svg" height="10" viewBox="0 -960 960 960" width="10"><path d="M480-200q-117 0-198.5-81.5T200-480q0-117 81.5-198.5T480-760q117 0 198.5 81.5T760-480q0 117-81.5 198.5T480-200Z"/></svg></span>
+                <span class="rating fx fx-center"><svg style="fill: #FFD700 " xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-269 314-169q-11 7-23 6t-21-8q-9-7-14-17.5t-2-23.5l44-189-147-127q-10-9-12.5-20.5T140-571q4-11 12-18t22-9l194-17 75-178q5-12 15.5-18t21.5-6q11 0 21.5 6t15.5 18l75 178 194 17q14 2 22 9t12 18q4 11 1.5 22.5T809-528L662-401l44 189q3 13-2 23.5T690-171q-9 7-21 8t-23-6L480-269Z"/></svg> ${score}</span>
+            <span class="dot">
+                <svg style="fill: #fff;" xmlns="http://www.w3.org/2000/svg" height="10" viewBox="0 -960 960 960" width="10"><path d="M480-200q-117 0-198.5-81.5T200-480q0-117 81.5-198.5T480-760q117 0 198.5 81.5T760-480q0 117-81.5 198.5T480-200Z"/></svg></span>
+            <span class="type">${type}</span>
+        </div>
+    </div>
+</div>
+    `;
+    }
+  }).catch(error => {
+    console.error(error)
+  });
+
+  let tv = document.querySelector(".tv .content");
+  fetch('https://aniapi-eight.vercel.app/api/topAnimes?type=tv&page=1')
+    .then(response => {
+      return response.json();
+    }).then(data => {
+      let list = data['items'];
+      console.log(list)
+      for (let i = 0; i < 9; i++) {
+        
+      let imgUrl = list[i]["imgs"]["small"];
+      let title = list[i]["title"];
+      let type = list[i]["otherInfo"].split("\n")[0].split("(")[0];
+      let epNo = list[i]["otherInfo"].split("\n")[0].split("(")[1].replace(")","");
+      let score = list[i]["score"];
+      tv.innerHTML += `
+      <div class="featured-anime-card">
+      <img src="${imgUrl}" alt="One Piece">
+      <div class="details">
+          <strong class="featured-anime-card_name">
+              ${title}
+          </strong>
+          <div class="featured-anime-card_otherInfo">
+              <span class="ep_no fx fx-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m160-800 65 130q7 14 20 22t28 8q30 0 46-25.5t2-52.5l-41-82h80l65 130q7 14 20 22t28 8q30 0 46-25.5t2-52.5l-41-82h80l65 130q7 14 20 22t28 8q30 0 46-25.5t2-52.5l-41-82h120q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800Z"/></svg> ${epNo}</span>
+              <span class="dot"><svg style="fill: #fff;" xmlns="http://www.w3.org/2000/svg" height="10" viewBox="0 -960 960 960" width="10"><path d="M480-200q-117 0-198.5-81.5T200-480q0-117 81.5-198.5T480-760q117 0 198.5 81.5T760-480q0 117-81.5 198.5T480-200Z"/></svg></span>
+                  <span class="rating fx fx-center"><svg style="fill: #FFD700 " xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-269 314-169q-11 7-23 6t-21-8q-9-7-14-17.5t-2-23.5l44-189-147-127q-10-9-12.5-20.5T140-571q4-11 12-18t22-9l194-17 75-178q5-12 15.5-18t21.5-6q11 0 21.5 6t15.5 18l75 178 194 17q14 2 22 9t12 18q4 11 1.5 22.5T809-528L662-401l44 189q3 13-2 23.5T690-171q-9 7-21 8t-23-6L480-269Z"/></svg> ${score}</span>
+              <span class="dot">
+                  <svg style="fill: #fff;" xmlns="http://www.w3.org/2000/svg" height="10" viewBox="0 -960 960 960" width="10"><path d="M480-200q-117 0-198.5-81.5T200-480q0-117 81.5-198.5T480-760q117 0 198.5 81.5T760-480q0 117-81.5 198.5T480-200Z"/></svg></span>
+              <span class="type">${type}</span>
+          </div>
+      </div>
+  </div>
+      `;
+      }
+    }).catch(error => {
+      console.error(error)
+    });
