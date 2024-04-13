@@ -192,7 +192,7 @@ fetch('https://aniapi-eight.vercel.app/api/topAnimes?type=airing&page=1')
     let imgUrl = list[i]["imgs"]["small"];
     let title = list[i]["title"];
     let type = list[i]["otherInfo"].split("\n")[0].split("(")[0];
-    let epNo = list[i]["otherInfo"].split("\n")[0].split("(")[1].replace(")","");
+    let epNo = list[i]["otherInfo"].split("\n")[0].split("(")[1].replace("eps)","");
     let score = list[i]["score"];
     airing.innerHTML += `
     <div class="featured-anime-card">
@@ -230,7 +230,7 @@ fetch('https://aniapi-eight.vercel.app/api/topAnimes?type=upcoming&page=1')
     let imgUrl = list[i]["imgs"]["small"];
     let title = list[i]["title"];
     let type = list[i]["otherInfo"].split("\n")[0].split("(")[0];
-    let epNo = list[i]["otherInfo"].split("\n")[0].split("(")[1].replace(")","");
+    let epNo = list[i]["otherInfo"].split("\n")[0].split("(")[1].replace("eps)","");
     let score = list[i]["score"];
     upcoming.innerHTML += `
     <div class="featured-anime-card">
@@ -268,7 +268,7 @@ fetch('https://aniapi-eight.vercel.app/api/topAnimes?type=movie&page=1')
     let imgUrl = list[i]["imgs"]["small"];
     let title = list[i]["title"];
     let type = list[i]["otherInfo"].split("\n")[0].split("(")[0];
-    let epNo = list[i]["otherInfo"].split("\n")[0].split("(")[1].replace(")","");
+    let epNo = list[i]["otherInfo"].split("\n")[0].split("(")[1].replace("eps)","");
     let score = list[i]["score"];
     movie.innerHTML += `
     <div class="featured-anime-card">
@@ -306,7 +306,7 @@ fetch('https://aniapi-eight.vercel.app/api/topAnimes?type=movie&page=1')
       let imgUrl = list[i]["imgs"]["small"];
       let title = list[i]["title"];
       let type = list[i]["otherInfo"].split("\n")[0].split("(")[0];
-      let epNo = list[i]["otherInfo"].split("\n")[0].split("(")[1].replace(")","");
+      let epNo = list[i]["otherInfo"].split("\n")[0].split("(")[1].replace("eps)","");
       let score = list[i]["score"];
       tv.innerHTML += `
       <div class="featured-anime-card">
