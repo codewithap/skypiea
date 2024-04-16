@@ -18,6 +18,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@40,700,0,200" />
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
     <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}?v=2">
     <link rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}?v=2">
     <title>Skypiea</title>
@@ -53,10 +54,16 @@
 
     </header>
     <section id="body">
+        <div class="slideShow_mobile">
+            <div class="slider"><button class="prev slideShowBtn" onclick="prev()"><span class="material-symbols-rounded">
+                arrow_back_ios
+                </span></button><button class="next slideShowBtn" onclick="next()"><span class="material-symbols-rounded">
+                    arrow_forward_ios
+                    </span></button>
+            </div>
+        </div>
         <div class="slideShow">
             
-
-
 
             
         </div>
