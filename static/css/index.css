@@ -210,6 +210,34 @@ text-overflow: ellipsis;
   color: #9749fe;
 }
 
+footer{
+  padding: 5px 30px;
+  background-color: #0a0a10;
+}
+
+footer ol{
+  color: #e4e4e4;
+  padding: 0 30px;
+}
+
+footer h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #e4e4e4;
+}
+footer p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #e4e4e4;
+
+}
+.highlight {
+  color: rgb(18, 235, 18);
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+
 /* _____________________________ */
 /* Media queries */
 

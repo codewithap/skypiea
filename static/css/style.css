@@ -137,7 +137,7 @@
 
 #anime-featured .animes{
   width: 100%;
-  margin: 10px;
+  margin: 5px 10px;
 }
 
 #anime-featured .animes a{
@@ -156,7 +156,7 @@
   display: flex;
   color: #fff;
   border-bottom: 0.5px solid #555555ae;
-  padding: 20px;
+  padding:  10px 20px;
   cursor: pointer;
 
 }
@@ -164,7 +164,7 @@
 .featured-anime-card .details{
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 5px 10px;
 }
 
 .featured-anime-card .details strong{
@@ -206,30 +206,27 @@
 
 /* _____ Media queries_____ */
 
-.slideShow{
-  display: none;
-}
 
-.slideShow_mobile{
+.slideShow{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.slideShow_mobile .slider{
+.slideShow .slider{
   width: 100%;
   margin: 0 auto 20px auto;
   background: #101124;
 }
 
-.slideShow_mobile .slider {
+.slideShow .slider {
   display: flex;
   overflow: hidden;
   position: relative;
 }
 
-.slideShow_mobile .slider .btn, .slideShow_mobile .slider .a{
+.slideShow .slider .btn, .slideShow .slider .a{
   height: 100%;
   width: 100%;
   background: none;
@@ -237,30 +234,31 @@
   transition: 500ms ease-out;
 }
 
-.slideShow_mobile .slider .a{
+.slideShow .slider .a{
   position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 71, 0, 1);
+  /* background: rgba(255, 71, 0, 1); */
   transition: 400ms ease-in-out;
 }
 
-.slideShow_mobile .slider .btn{
+.slideShow .slider .btn{
   width: 100%;
   height: 100%;
   overflow: hidden;
   z-index: 10;
 }
 
-.slideShow_mobile .slider img{
+.slideShow .slider img{
   height: 100%;
   width: 100%;
   background-position: center;
   z-index: 20;
+  filter: saturate(130%) contrast(110%);
 }
 
-.slideShow_mobile .slider .title{
+.slideShow .slider .title{
   position: absolute;
   font-size: 1.6rem;
   font-weight: 900;
@@ -283,7 +281,7 @@
    align-items: center;
 }
 
-.slideShow_mobile .watchBtn{
+.slideShow .watchBtn{
   font-size: 1.1rem;
   margin: 10px;
   padding: 0 25px 15px 25px;
@@ -296,17 +294,17 @@
   transition: 100ms;
 }
 
-.slideShow_mobile .watchBtn:hover{
+.slideShow .watchBtn:hover{
   outline: 5px solid rgba(163, 71, 248, 0.544);
 }
 
-.slideShow_mobile .watchBtn span{
+.slideShow .watchBtn span{
   font-size: 2rem;
   position: relative;
   top: 10px
 }
 
-.slideShow_mobile .slider .bg{
+.slideShow .slider .bg{
   position: absolute;
   width: 100%;
   margin: auto;
@@ -317,7 +315,7 @@
   background: linear-gradient(180deg, #10101927 10%, #101019 95%);
 }
 
-.slideShow_mobile .slideShowBtn{
+.slideShow .slideShowBtn{
   position: absolute;
   z-index: 100;
   background: rgba(122, 77, 255, 0.462);
@@ -331,42 +329,121 @@
   top: 40%;
 }
 
-.slideShow_mobile .slideShowBtn span{
+.slideShow .slideShowBtn span{
   font-weight: bolder;
   scale: 1.3;
 }
 
-.prev{
+.slideShow .prev{
   left: 20px;
 }
 
-.next{
+.slideShow .next{
   right: 20px;
 }
 
+.slideShow .desktop_bg{
+  display: none;
+}
+
+.topAnimeInfo{
+  display: none;
+}
 
 
-
-
-
-@media (min-width: 510px) {
+@media (min-width: 520px) {
   .card{
     scale: 1;
     margin: 5px 8px;
   }
 
-  .slideShow_mobile{
-    display: none;
+  .slideShow{
+    height: 550px;
   }
 
-  .slideShow{
-    display: block;
+  .slideShow .slider img{
+    width: 100%;
+    height: 800px;
   }
+
+  
   
   
 }
 
 
-@media (min-width: 1300px) {
+@media (min-width: 800px) {
+  .slideShow .desktop_bg{
+    display: block;
+    position: absolute;
+    background-position: center;
+    width: 100%;
+    height: 100%;
+    filter: blur(40px) opacity(30%) saturate(500%);
+  }
+
+  .slideShow .slider img{
+    width: 400px;
+    height: 550px;
+  }
+
+  .slideShow .slider .title{
+    top: 20px;
+    padding-left: 420px;
+    align-items: flex-start;
+    height: 100%;
+  }
+
+  .slideShow .title p{
+    position: relative;
+    left: 20px;
+    white-space: wrap;
+  }
+
+  .topAnimeInfo{
+    display: block;
+    padding: 0 20px;
+  }
+
+  .topAnimeInfo div:nth-child(1) span{
+    background-color: rgb(29, 216, 0);
+    padding: 0 0;
+    text-align: center;
+    font-size: 1.1rem;
+    text-shadow: none;
+    height: 18px;
+    border-radius: 4px;
+    color: #333;
+    font-weight: bolder;
+    margin: 5px 4px;
+    width: 25px;
+  }
   
+  .topAnimeInfo div:nth-child(1) span:nth-child(4), .topAnimeInfo div:nth-child(1) span:nth-child(4) .material-symbols-rounded{
+    scale: 1.5;
+    width: 19px;
+    text-align: center;
+    height: 17px;
+    padding: 0;
+    fill: #ffbade;
+    background-color: #ffbade;
+  }
+  
+  .topAnimeInfo div:nth-child(2) span{
+    font-size: 1.2rem;
+    font-weight: bolder;
+    color: #9a9a9a;
+    text-shadow: none;
+  }
+
+  .slideShow .prev{
+    left: calc(100% - 73px);
+    top: 75%;
+    width: 53px;
+  }
+  
+  .slideShow .next{
+    right: 20px;
+    top: 57%;
+  }
 }

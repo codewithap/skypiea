@@ -115,11 +115,13 @@ function scrollX(slider){
 }
 
 /////  slider /////
-let slider = document.querySelector('.slideShow_mobile .slider');
+let slider = document.querySelector('.slideShow .slider');
 console.log(slider.offsetWidth)
 slider.style.height = `${1.3*(slider.offsetWidth)}px`;
 let counter = 0;
   // image Slide show //
+
+
 
 fetch('https://aniapi-eight.vercel.app/api/topAnimes?page=1')
   .then(response => {
@@ -128,8 +130,21 @@ fetch('https://aniapi-eight.vercel.app/api/topAnimes?page=1')
     let SlidesList = data['items'];
     for (let i = 0; i < SlidesList.length; i++) {
   slider.innerHTML += `<div class='a' style='left: ${i*100}%'>
-  <div class='btn'><span class='title'><p>${SlidesList[i]['title']}</p>
-  
+  <div class="desktop_bg" style="background: url('${SlidesList[i]['imgs']['webp']['large']}')"> </div>
+  <div class='btn'><span class='title'><p>${SlidesList[i]['title']}</p><br>
+  <div class="topAnimeInfo">
+      <div>
+      <span style="background: none;color: #f3f3f3;">${SlidesList[i]['otherInfo'].split("\n")[0].split(" (")[0]}</span>
+      <span style="height: 25px;"><span class="material-symbols-rounded" style="position: relative; top:2px">video_library
+      </span>${SlidesList[i]['otherInfo'].split("\n")[0].split(" (")[1].replace(" eps)","")} &nbsp;</span>
+      <span style="background: transparent; font-weight: bolder; color: #fff"><span class="material-symbols-rounded" style="color: #FFD700; background: transparent;scale: 1.4;position: relative; top: 3px">star</span> ${SlidesList[i]['score']}</span>
+      <span style="background-color: transparent;"><span class="material-symbols-rounded">hd</span></span>
+      </div>
+      <div>
+      <span>&nbsp;&nbsp; <span style="scale:1.3;position: relative; top: 3px" class="material-symbols-rounded">calendar_month</span>${SlidesList[i]['otherInfo'].split("\n")[1]}</span>
+      
+      </div>
+  </div><br>
   <button class='watchBtn'><span class="material-symbols-rounded">play_arrow</span> START WATCHING</button></span><span class='bg'></span><img src='${SlidesList[i]['imgs']['webp']['large']}'>
   </div></div>`;
 }

@@ -47,10 +47,10 @@ let airing = document.querySelector(".airing .content");
 let tv = document.querySelector(".tv .content");
 let movie = document.querySelector(".movies .content");
 let upcoming = document.querySelector(".upcoming .content");
-getFeaturedAnimes(airing, "airing", 6)
-getFeaturedAnimes(upcoming, "upcoming", 6)
-getFeaturedAnimes(movie, "movie", 6)
-getFeaturedAnimes(tv, "tv", 6)
+getFeaturedAnimes(airing, "airing", 5)
+getFeaturedAnimes(upcoming, "upcoming", 5)
+getFeaturedAnimes(movie, "movie", 5)
+getFeaturedAnimes(tv, "tv", 5)
 
 //////   scroll X  ///////
 let tranding = document.querySelector(".trending .cards");
