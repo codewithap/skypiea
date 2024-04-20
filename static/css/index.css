@@ -2,6 +2,10 @@ body{
   background-color: #101019;
 }
 
+button{
+  cursor: pointer;
+}
+
 #body{
   overflow: hidden auto; 
   position: fixed;
@@ -237,6 +241,82 @@ footer p {
   text-decoration: underline;
 }
 
+.search-box{
+  position: fixed;
+  top: 80px;
+  z-index: 1000;
+  width: 100%;
+  height: 0;
+  display: flex;
+  transition: 150ms;
+  overflow: hidden;
+}
+.search-box input{
+  width: calc(100% - 80px);
+  height: 100%;
+  padding: 15px;
+  font-size: 1.1rem;
+  background-color: #101019b7;
+  backdrop-filter: blur(6px);
+  color: #fff;
+  border: none;
+  outline: none;
+}
+
+.search-box button{
+  width: 80px;
+  height: 100%;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background-color: #8203d7ac;
+  color: #fff;
+  backdrop-filter: blur(6px);
+  border: none;
+  cursor: pointer;
+  
+}
+
+.search-box input::placeholder{
+  font-weight:600;
+  font-size: 1rem;
+}
+
+
+.watchAnime{
+  width: 100%;
+  height: calc(100% - 1px);
+  position: fixed;
+  top: 0;
+  padding: 80px 5px 15px 5px;
+  background-color: #101019e9;
+  z-index: 999;
+  color: white;
+  overflow: auto;
+  display: none;
+  
+}
+
+.watchAnime .navigation{
+  background-color: #10101970;
+  padding: 5px;
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: space-between;
+}
+
+.watchAnime .navigation button{
+  color: #fff;
+  font-weight: bolder;
+  background-color: #110028a3;
+  border: none;
+  padding: 10px;
+}
+
+.watchAnime .navigation button span{
+  scale: 1.5;
+  position: relative;
+  top: 2px;
+}
 
 /* _____________________________ */
 /* Media queries */

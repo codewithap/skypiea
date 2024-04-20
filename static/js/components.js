@@ -12,7 +12,7 @@ function getFeaturedAnimes(container, Type, no){
     let epNo = list[i]["otherInfo"].split("\n")[0].split("(")[1].replace("eps)","");
     let score = list[i]["score"];
     container.innerHTML += `
-    <div class="featured-anime-card">
+    <div class="featured-anime-card" onclick='animeInfo(${list[i]["mal_id"]})'>
     <img draggable="false" src="${imgUrl}" alt="${title}">
     <div class="details">
         <strong class="featured-anime-card_name">
@@ -47,7 +47,7 @@ function topAnimes(popularCards, Type, no){
     let SlidesList = data['items'];
     for (let i = 0; i < no; i++) {
       popularCards.innerHTML += `
-      <div class="card fx" style="transform: translateX(${i}px)">
+      <div onclick='animeInfo(${SlidesList[i]["mal_id"]})' class="card fx" style="transform: translateX(${i}px)">
   <div class="rank">#${i+1}</div>
     <div class="image">
       <div class="card_bg2"></div>
@@ -145,7 +145,7 @@ fetch('https://aniapi-eight.vercel.app/api/topAnimes?page=1')
       
       </div>
   </div><br>
-  <button class='watchBtn'><span class="material-symbols-rounded">play_arrow</span> START WATCHING</button></span><span class='bg'></span><img src='${SlidesList[i]['imgs']['webp']['large']}'>
+  <button onclick='animeInfo(${SlidesList[i]["mal_id"]})' class='watchBtn'><span class="material-symbols-rounded">play_arrow</span> START WATCHING</button></span><span class='bg'></span><img src='${SlidesList[i]['imgs']['webp']['large']}'>
   </div></div>`;
 }
   }).catch(error => {
@@ -178,3 +178,34 @@ let next = () => {
   slide()
 }
 setInterval(next, 8000);
+
+
+//////// search  /////////
+
+let searchBtn = document.querySelector('.nav-bar .search');
+let searchBox = document.querySelector(".search-box");
+searchOpened = false
+searchBtn.addEventListener("click",()=>{
+  if(searchOpened == false){
+    searchBox.style.height = "60px";
+    searchBtn.querySelector("span").style.color = "#a903d7ac";
+    searchOpened = true;
+  }
+  else if(searchOpened == true){
+    searchBox.style.height = "0";
+    searchBtn.style.color = "#fff";
+    searchBtn.querySelector("span").style.color = "#fff";
+    searchOpened = false;
+  }
+})
+let watchAnimeBox = document.querySelector(".watchAnime");
+
+function closeWatchAnime(){
+  watchAnimeBox.style.display = "none";
+}
+
+
+function animeInfo(malId){
+  watchAnimeBox.style.display = "block"
+
+}
