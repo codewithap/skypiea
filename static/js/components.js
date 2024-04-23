@@ -198,14 +198,70 @@ searchBtn.addEventListener("click",()=>{
     searchOpened = false;
   }
 })
+
 let watchAnimeBox = document.querySelector(".watchAnime");
+let buttons = document.querySelectorAll(".navigation .otherButtons button");
 
 function closeWatchAnime(){
   watchAnimeBox.style.display = "none";
 }
 
+let animeContainer = document.querySelectorAll(".animeBox");
+function nextCotainer(x){
+  animeContainer.forEach(e =>{
+    e.style.display = "none";
+  });
+  animeContainer[x - 1].style.display = "block";
+  
+  buttons.forEach(e => {
+    e.style.color = "#fff";
+  });
+  buttons[x - 1].style.color = "limegreen";
+}
+
+
 
 function animeInfo(malId){
-  watchAnimeBox.style.display = "block"
+  animeContainer[0].innerHTML = "";
+  watchAnimeBox.style.display = "block";
+  buttons[0].style.color = "limegreen";
+  buttons.forEach(e => {
+    e.style.color = "#fff";
+  });
+  buttons[0].style.color = "limegreen";
+  animeContainer.forEach(e =>{
+    e.style.display = "none";
+  });
+  animeContainer[0].style.display = "block";
+  getInfo(malId)
+}
 
+function getInfo(malid){
+  fetch(`https://aniapi-eight.vercel.app/api/anime?id=${malid}`)
+  .then(response => {
+    return response.json();
+  }).then(data => {
+    animeContainer[0].innerHTML = `
+    <div class="anisContent">
+
+      <div class="title">
+        <img src="${data["imgs"]["webp"]["large"]}">
+        <h1>${data["info"]["english"]}</h1>
+        <button>Watch Now</button>
+      </div>
+
+      <div class="anisInfo">
+        <h1>${data["info"]["english"]}</h1>
+        <p>${data["description"]}</p>
+      </div>
+    </div>
+
+
+    <div class="desc">${data["description"]}</div>
+
+    `;
+
+  }).catch(error => {
+    console.error(error)
+  });
 }
