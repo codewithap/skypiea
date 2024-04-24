@@ -389,6 +389,11 @@ footer p {
   
 }
 
+.animeBox .title div{
+  display: flex;
+  width: 200px;
+}
+
 .anisInfo{
    max-width: 1000px;
 }
@@ -402,7 +407,7 @@ footer p {
   color: #a2a2a2;
   font-weight: bold;
   border-radius: 8px;
-  background-color: #101019bf;
+  background-color: #101019e2;
 }
 
 .animeBox .desc::-webkit-scrollbar{
@@ -426,7 +431,72 @@ footer p {
   font-weight: 700;
 }
 
+.animeBox .title button:nth-child(1){
+  width: calc(100% - 40px);
+  font-size: 1.15rem;
+}
 
+.animeBox .title button:nth-child(2){
+  background-color: #fefefe;
+  color: #333;
+  width: 40px;
+}
+
+.animeBox .title button:nth-child(2) span{
+  scale: 1.5;
+}
+
+.otherAniInfo{
+  width: 100%;
+  margin: auto;
+  display: flex;
+  overflow-x: auto;
+  cursor: grabbing;
+  background-color: #00000034;
+  padding: 10px 0;
+  /* backdrop-filter: blur(6px); */
+  border-radius: 8px;
+  outline: 4px solid #00000034;
+}
+
+/* .otherAniInfo::-webkit-scrollbar{
+  display: block;
+} */
+
+
+.otherAniInfo .elements span{
+  white-space: pre;
+  color: #c2c2c2;
+}
+
+.otherAniInfo .elements strong{
+  font-weight: bold;
+}
+
+.otherAniInfo .elements{
+  margin: 10px;
+}
+
+.animeBox .title button:nth-child(2){
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+
+.animeBox .title button:nth-child(1){
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.animeSongs iframe{
+  display: block;
+  width: 90%;
+  margin: 10px auto;
+}
+
+.anisItems{
+  width: 1210px;
+  margin: auto;
+}
 
 /* _____________________________ */
 /* Media queries */
@@ -463,5 +533,30 @@ footer p {
   .animeBox .title button{
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+  }
+
+  .animeBox .title button:nth-child(2){
+    border-bottom-left-radius: 0;
+  }
+
+  .animeBox .title button:nth-child(1){
+    border-bottom-right-radius: 0;
+  }
+
+  .otherAniInfo{
+    flex-direction: column;
+    overflow: hidden;
+    cursor: grabbing;
+    flex-direction: column;
+    width: 250px;
+    margin: 10px;
+  }
+  
+  .otherAniInfo .elements span{
+    white-space: wrap;
+  }
+
+  .animeBox .anisItems{
+    display: flex;
   }
 }

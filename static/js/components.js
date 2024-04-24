@@ -1,3 +1,10 @@
+
+
+function strip(string) {
+  return string.replace(/^\s+|\s+$/g, '');
+}
+
+
 // Featured Animes //
 function getFeaturedAnimes(container, Type, no){
   fetch(`https://aniapi-eight.vercel.app/api/topAnimes?type=${Type}&page=1`)
@@ -219,10 +226,9 @@ function nextCotainer(x){
   buttons[x - 1].style.color = "limegreen";
 }
 
-
-
 function animeInfo(malId){
   animeContainer[0].innerHTML = "";
+  animeContainer[3].innerHTML = "";
   watchAnimeBox.style.display = "block";
   buttons[0].style.color = "limegreen";
   buttons.forEach(e => {
@@ -241,13 +247,31 @@ function getInfo(malid){
   .then(response => {
     return response.json();
   }).then(data => {
+     let infoHtml = ``;
+    let info = data["info"];
+    for(let key in info){
+      if(key == "score"){
+        infoHtml += `<div class="elements"> <strong style="text-transform: capitalize;">${key}</strong> <br><span>${(info[key]).split(" (scored by")[0]}</span> </div>`;
+      }
+      else if(key == "ranked"){
+        infoHtml += `<div class="elements"> <strong style="text-transform: capitalize;">${key}</strong> <br><span>${(info[key]).split("\n")[0]}</span> </div>`;
+      }
+      else if(key == "producers"){
+        infoHtml += `<div class="elements"> <strong style="text-transform: capitalize;">${key}</strong> <br><span>${(info[key]).trim()}</span> </div>`;
+      }
+      else{
+        infoHtml += `<div class="elements"> <strong style="text-transform: capitalize;">${key}</strong> <br><span>${strip(info[key])}</span> </div>`;
+      }
+      
+    }
+
     animeContainer[0].innerHTML = `
     <div class="anisContent">
 
       <div class="title">
         <img src="${data["imgs"]["webp"]["large"]}">
         <h1>${data["info"]["english"]}</h1>
-        <button>Watch Now</button>
+        <div><button>Watch Now</button> <button><span class="material-symbols-rounded">add</span></button></div>
       </div>
 
       <div class="anisInfo">
@@ -256,10 +280,24 @@ function getInfo(malid){
       </div>
     </div>
 
-
+    <div class="anisItems">
+    <div class="otherAniInfo">${infoHtml}</div>
+    <br>
     <div class="desc">${data["description"]}</div>
+    <br>
+    </div>
 
     `;
+    scrollX(document.querySelector(".otherAniInfo"))
+
+
+    let songs = data["theme_songs"]
+    for(let song in songs){
+      animeContainer[3].innerHTML += `
+      <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${songs[song]}?utm_source=generator" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    `;
+    }
+    
 
   }).catch(error => {
     console.error(error)
