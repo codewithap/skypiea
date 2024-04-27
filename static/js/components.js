@@ -209,11 +209,17 @@ searchBtn.addEventListener("click",()=>{
 let watchAnimeBox = document.querySelector(".watchAnime");
 let buttons = document.querySelectorAll(".navigation .otherButtons button");
 
-function closeWatchAnime(){
-  watchAnimeBox.style.display = "none";
-}
+// document.querySelector("#body > div.watchAnime > div.container > div:nth-child(1) > div.anisContent > div.title > div > button:nth-child(1)")
 
 let animeContainer = document.querySelectorAll(".animeBox");
+
+function closeWatchAnime(){
+  watchAnimeBox.style.display = "none";
+  sessionStorage.removeItem("epIds_saved");
+  sessionStorage.removeItem("currentAnimeName");
+  animeContainer[1].innerHTML = ""
+}
+
 function nextCotainer(x){
   animeContainer.forEach(e =>{
     e.style.display = "none";
@@ -239,14 +245,28 @@ function animeInfo(malId){
     e.style.display = "none";
   });
   animeContainer[0].style.display = "block";
+  sessionStorage.removeItem("epIds_saved");
+  sessionStorage.removeItem("currentAnimeName");
   getInfo(malId)
 }
+
+buttons[1].addEventListener("click", ()=>{
+  if(sessionStorage.getItem("epIds_saved") == null){
+    sessionStorage.setItem("epIds_saved", true);
+    let name = sessionStorage.getItem("currentAnimeName");
+    getAnimes(name);
+  }
+  else if(sessionStorage.getItem("epIds_saved") != null){
+    getAnimesFromSessionStorage()
+  }
+});
 
 function getInfo(malid){
   fetch(`https://aniapi-eight.vercel.app/api/anime?id=${malid}`)
   .then(response => {
     return response.json();
   }).then(data => {
+    sessionStorage.setItem("currentAnimeName", data["info"]["english"]);
      let infoHtml = ``;
     let info = data["info"];
     for(let key in info){
@@ -262,7 +282,6 @@ function getInfo(malid){
       else{
         infoHtml += `<div class="elements"> <strong style="text-transform: capitalize;">${key}</strong> <br><span>${strip(info[key])}</span> </div>`;
       }
-      
     }
 
     animeContainer[0].innerHTML = `
@@ -271,7 +290,7 @@ function getInfo(malid){
       <div class="title">
         <img src="${data["imgs"]["webp"]["large"]}">
         <h1>${data["info"]["english"]}</h1>
-        <div><button>Watch Now</button> <button><span class="material-symbols-rounded">add</span></button></div>
+        <div><button onclick='document.querySelectorAll(".navigation .otherButtons button")[1].click()'>Watch Now</button> <button><span class="material-symbols-rounded">add</span></button></div>
       </div>
 
       <div class="anisInfo">
@@ -286,10 +305,8 @@ function getInfo(malid){
     <div class="desc">${data["description"]}</div>
     <br>
     </div>
-
     `;
-    scrollX(document.querySelector(".otherAniInfo"))
-
+    scrollX(document.querySelector(".otherAniInfo"));
 
     let songs = data["theme_songs"]
     for(let song in songs){
@@ -297,9 +314,34 @@ function getInfo(malid){
       <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${songs[song]}?utm_source=generator" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     `;
     }
-    
-
+  
   }).catch(error => {
     console.error(error)
   });
+}
+
+function getAnimes(name_eng){
+  fetch(`https://aniapi-eight.vercel.app/api/search/gogo?q=${name_eng}`)
+  .then(response => {
+    return response.json();
+  }).then(data => {
+    fetch(`https://aniapi-eight.vercel.app/api/anime/epis?gogoid=${data[0]["id"]}`)
+    .then(response => {
+      return response.json();
+    }).then(data => {
+      console.log(data["episodes"])
+      animeContainer[1].innerHTML =`
+        ${data["episodes"]}
+      `;
+
+    }).catch(error => {
+      console.error(error)
+    });
+  }).catch(error => {
+    console.error(error)
+  });
+}
+
+function getAnimesFromSessionStorage(){
+    console.log("working!!!!")
 }

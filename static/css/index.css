@@ -395,7 +395,7 @@ footer p {
 }
 
 .anisInfo{
-   max-width: 1000px;
+  width: 1000px;
 }
 
 .animeBox .desc{
@@ -494,7 +494,7 @@ footer p {
 }
 
 .anisItems{
-  width: 1210px;
+  max-width: 1210px;
   margin: auto;
 }
 
