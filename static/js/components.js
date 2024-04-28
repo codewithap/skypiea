@@ -329,11 +329,37 @@ function getAnimes(name_eng){
     .then(response => {
       return response.json();
     }).then(data => {
-      console.log(data["episodes"])
+      console.log(data)
+      let epis = data["episodes"]
+      let episHtml = ""
+      for (let i = 0; i < epis.length; i++) {
+        episHtml += `<button onclick='getEpisM3u8("${epis[i]}")' class="epBtn ep${i+1}"> ${i + 1} </button>`;
+      }
       animeContainer[1].innerHTML =`
-        ${data["episodes"]}
-      `;
+      <div class="video">
+        <div class="m3u8">
 
+        </div>
+        <div class="epis">
+          ${episHtml}
+        </div>
+      </div>
+      `;
+      getEpisM3u8(`${epis[0]}`)
+      addEventListener('resize', () => {
+        let video = document.querySelector(".video .m3u8");
+        let w = video.offsetWidth;
+        video.style.height = `${w/1.8}px`;
+      });
+      let video = document.querySelector(".video .m3u8");
+      let w = video.offsetWidth;
+      video.style.height = `${w/1.8}px`;
+      let epNo = epis.length;
+      let epPageNo = (Math.floor(epNo/100) + 1);
+      // let pageOption = document.querySelector('.options .inpselect');
+      // for (let i = 0; i < epPageNo; i++) {
+      //   pageOption.innerHTML += '<span onclick="changeList('+i+')">'+`${100*i} - ${100*(i+1) -1}`+'</span>'
+      // }
     }).catch(error => {
       console.error(error)
     });
@@ -344,4 +370,31 @@ function getAnimes(name_eng){
 
 function getAnimesFromSessionStorage(){
     console.log("working!!!!")
+}
+
+function getEpisM3u8(gogoEpId){
+  fetch(`https://aniapi-eight.vercel.app/api/anime/ep?epid=${gogoEpId}`)
+  .then(response => {
+    return response.json();
+  }).then(data => {
+    let vidstreamingUrl = data[0]["video"];
+    fetch(`https://aniapi-eight.vercel.app/api/extractors/vidstreaming?url=${vidstreamingUrl}`)
+    .then(response => {
+      return response.json();
+    }).then(data => {
+      console.log(data)
+      let file1 = data["source"][0]["file"]
+      let file2 = data["source_bk"][0]["file"]
+      console.log(file1, file2)
+      let video = document.querySelector(".m3u8");
+      html = `
+      <iframe class="m3u8" frameborder="0" src="/play?m3u8=${file1}&m3u8_2=${file2}" style="width: 100%;height: 100%">
+        </iframe>`;
+        video.innerHTML = html;
+    }).catch(error => {
+      console.error(error)
+    });
+  }).catch(error => {
+    console.error(error)
+  });
 }
