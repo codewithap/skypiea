@@ -320,6 +320,7 @@ function getInfo(malid){
   });
 }
 
+var epRangeOpened = false;
 function getAnimes(name_eng){
   fetch(`https://aniapi-eight.vercel.app/api/search/gogo?q=${name_eng}`)
   .then(response => {
@@ -329,11 +330,18 @@ function getAnimes(name_eng){
     .then(response => {
       return response.json();
     }).then(data => {
+
+
       console.log(data)
       let epis = data["episodes"]
       let episHtml = ""
       for (let i = 0; i < epis.length; i++) {
-        episHtml += `<button onclick='getEpisM3u8("${epis[i]}")' class="epBtn ep${i+1}"> ${i + 1} </button>`;
+        if(i < 100){
+          episHtml += `<button onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn ep${i+1}"> ${i + 1} </button>`;
+        } else {
+          episHtml += `<button style="display: none" onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn ep${i+1}"> ${i + 1} </button>`;
+        }
+        
       }
       animeContainer[1].innerHTML =`
       <div class="video">
@@ -341,11 +349,21 @@ function getAnimes(name_eng){
 
         </div>
         <div class="epis">
-          ${episHtml}
+          <div class="controls">
+          <div class="epRange">
+          <div class="currentAnime">
+            You Are Watching <b></b>
+          </div>
+            <div class="selectedValue"> <b>1 - 100</b><span class="material-symbols-rounded">expand_more</span></div>
+            <span class="rangeList"></span>
+          </div>
+          
+          </div>
+          <div class="epis_btns">${episHtml}</div>
         </div>
       </div>
       `;
-      getEpisM3u8(`${epis[0]}`)
+      getEpisM3u8(`${epis[0]}`, 0)
       addEventListener('resize', () => {
         let video = document.querySelector(".video .m3u8");
         let w = video.offsetWidth;
@@ -356,10 +374,28 @@ function getAnimes(name_eng){
       video.style.height = `${w/1.8}px`;
       let epNo = epis.length;
       let epPageNo = (Math.floor(epNo/100) + 1);
-      // let pageOption = document.querySelector('.options .inpselect');
-      // for (let i = 0; i < epPageNo; i++) {
-      //   pageOption.innerHTML += '<span onclick="changeList('+i+')">'+`${100*i} - ${100*(i+1) -1}`+'</span>'
-      // }
+
+      let pageOption = document.querySelector('.epis .controls .epRange .rangeList');
+      
+      let epRange = document.querySelector(".epRange .selectedValue");
+      epRange.addEventListener("click", ()=>{
+        if(!epRangeOpened){
+          pageOption.style.height= "120px";
+          epRangeOpened = true;
+        } else {
+          pageOption.style.height = "0";
+          epRangeOpened = false;
+        }
+      });
+      
+      for (let i = 0; i < epPageNo; i++) {
+        pageOption.innerHTML += '<span onclick="changeList('+i+')">'+`${100*i + 1} - ${100*(i+1)}`+'</span>'
+      }
+    
+    
+    
+    
+    
     }).catch(error => {
       console.error(error)
     });
@@ -368,11 +404,29 @@ function getAnimes(name_eng){
   });
 }
 
+function changeList(i){
+  document.querySelector(".selectedValue b").innerHTML = `${100*i + 1} - ${100*(i+1)}`;
+  let pageOption = document.querySelector('.epis .controls .epRange .rangeList');
+  let epis = document.querySelectorAll(".epis_btns button");
+  pageOption.style.height = "0";
+  
+  console.log(epis);
+  for (let x = 0; x < epis.length; x++) {
+    if(x > (100*i - 1) && x < (100*(i+1)) ){
+      epis[x].style.display = "block";
+    } else {
+      epis[x].style.display = "none";
+    }
+    console.log(x > (100*i) && x < (100*(i+1) + 1));
+  }
+  epRangeOpened = false;
+}
+
 function getAnimesFromSessionStorage(){
     console.log("working!!!!")
 }
 
-function getEpisM3u8(gogoEpId){
+function getEpisM3u8(gogoEpId, i){
   fetch(`https://aniapi-eight.vercel.app/api/anime/ep?epid=${gogoEpId}`)
   .then(response => {
     return response.json();
@@ -391,6 +445,7 @@ function getEpisM3u8(gogoEpId){
       <iframe class="m3u8" frameborder="0" src="/play?m3u8=${file1}&m3u8_2=${file2}" style="width: 100%;height: 100%">
         </iframe>`;
         video.innerHTML = html;
+        document.querySelector(".currentAnime b").innerHTML = `Episode ${i + 1}`
     }).catch(error => {
       console.error(error)
     });
