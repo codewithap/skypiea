@@ -332,7 +332,6 @@ function getAnimes(name_eng){
     }).then(data => {
 
 
-      console.log(data)
       let epis = data["episodes"]
       let episHtml = ""
       for (let i = 0; i < epis.length; i++) {
@@ -345,19 +344,18 @@ function getAnimes(name_eng){
       }
       animeContainer[1].innerHTML =`
       <div class="video">
-        <div class="m3u8">
-
+        <div class="currentAnime">
+          <div class="m3u8">
+        
+          </div><br>
+          <p> You Are Watching <b></b> </p>
         </div>
         <div class="epis">
           <div class="controls">
-          <div class="epRange">
-          <div class="currentAnime">
-            You Are Watching <b></b>
-          </div>
-            <div class="selectedValue"> <b>1 - 100</b><span class="material-symbols-rounded">expand_more</span></div>
-            <span class="rangeList"></span>
-          </div>
-          
+            <div class="epRange">
+              <div class="selectedValue"> <b>1 - 100</b><span class="material-symbols-rounded">expand_more</span></div>
+              <span class="rangeList"></span>
+            </div>
           </div>
           <div class="epis_btns">${episHtml}</div>
         </div>
@@ -365,13 +363,13 @@ function getAnimes(name_eng){
       `;
       getEpisM3u8(`${epis[0]}`, 0)
       addEventListener('resize', () => {
-        let video = document.querySelector(".video .m3u8");
+        let video = document.querySelector(".video .currentAnime");
         let w = video.offsetWidth;
-        video.style.height = `${w/1.8}px`;
+        video.style.height = `${w/1.8 + 60}px`;
       });
-      let video = document.querySelector(".video .m3u8");
+      let video = document.querySelector(".video .currentAnime");
       let w = video.offsetWidth;
-      video.style.height = `${w/1.8}px`;
+      video.style.height = `${w/1.8 + 60}px`;
       let epNo = epis.length;
       let epPageNo = (Math.floor(epNo/100) + 1);
 
@@ -417,7 +415,6 @@ function changeList(i){
     } else {
       epis[x].style.display = "none";
     }
-    console.log(x > (100*i) && x < (100*(i+1) + 1));
   }
   epRangeOpened = false;
 }
