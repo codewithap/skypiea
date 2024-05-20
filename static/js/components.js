@@ -185,26 +185,84 @@ setInterval(next, 8000);
 
 let searchBtn = document.querySelector('.nav-bar .search');
 let searchBox = document.querySelector(".search-box");
+let searchContainer = document.querySelector(".searchContainer");
 searchOpened = false
 searchBtn.addEventListener("click",()=>{
   if(searchOpened == false){
     searchBox.style.height = "60px";
     searchBtn.querySelector("span").style.color = "#a903d7ac";
+    searchContainer.style.display = "flex";
     searchOpened = true;
   }
   else if(searchOpened == true){
     searchBox.style.height = "0";
     searchBtn.style.color = "#fff";
     searchBtn.querySelector("span").style.color = "#fff";
+    searchContainer.style.display = "none";
     searchOpened = false;
   }
-})
+});
+
+let sInput = searchBox.querySelector("input");
+let sBtn = searchBox.querySelector("button");
+
+sInput.addEventListener('keypress', function (e) {
+  if (e.key === 'Enter') {
+    searchAnime()
+  }
+});
+sBtn.addEventListener('click', function(e){searchAnime()});
+
+
+// {
+//   "imgs": {
+  //   "jpg": {
+    //   "large": "https://cdn.myanimelist.net/images/anime/1565/111305l.jpg",
+    //   "medium": "https://cdn.myanimelist.net/images/anime/1565/111305.jpg",
+    //   "small": "https://cdn.myanimelist.net/r/100x140/images/anime/1565/111305.jpg?s=804f7255a1dbc534340acc4a1714a36e"
+  //   },
+  //   "webp": {
+    //   "large": "https://cdn.myanimelist.net/images/anime/1565/111305l.webp",
+    //   "medium": "https://cdn.myanimelist.net/images/anime/1565/111305.webp"
+  //   }
+//   },
+//   "mal_id": 1735,
+//   "score": "8.27",
+//   "title": "Naruto: Shippuuden",
+//   "type": "TV",
+//   "url": "https://myanimelist.net/anime/1735/Naruto__Shippuuden"
+//   },
+
+
+async function searchAnime(){
+  let input = searchBox.querySelector(".search-box input").value;
+  try {
+    const response = await fetch(`https://aniapi-eight.vercel.app/api/search?q=${input}&page=1`);
+    const data = await response.json();
+    const pagesInfo = data.pagination;
+    let html = "";
+    for (let item of data.items){
+      html += `<div onclick="animeInfo(${item.mal_id})" class="card fx">
+      <div class="rank" style="border-radius: 8px;"><i style="color: yellow" class="bi bi-star-fill"></i> &nbsp;${item.score}</div>
+        <div class="image">
+          <div class="card_bg2"></div>
+          <div class="card_bg" style="background-image: url('${item.imgs.webp.medium}');"></div>
+          <img src="${item.imgs.webp.medium}" alt="${item.title}">
+        </div>
+      <div class="card-title">${item.title}</div>
+      </div>`;
+    }
+    searchContainer.innerHTML = html;
+  } catch (error){
+    console.error(error)
+  }
+}
+
+
+/////////////////////////////////////////////////////
 
 let watchAnimeBox = document.querySelector(".watchAnime");
 let buttons = document.querySelectorAll(".navigation .otherButtons button");
-
-// document.querySelector("#body > div.watchAnime > div.container > div:nth-child(1) > div.anisContent > div.title > div > button:nth-child(1)")
-
 let animeContainer = document.querySelectorAll(".animeBox");
 
 function closeWatchAnime(){
