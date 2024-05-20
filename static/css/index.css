@@ -491,13 +491,6 @@ footer p {
   border-top-right-radius: 0;
 }
 
-.animeSongs iframe{
-  display: block;
-  width: 90%;
-  margin: 10px auto;
-  background-color: #101019;
-}
-
 .anisItems{
   max-width: 1210px;
   margin: auto;
@@ -613,10 +606,101 @@ footer p {
   max-height: calc(100% - 40px);
 }
 
+.animeSongs{
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.songsCard{
+  width: 85%;
+  max-width: 600px;
+  height: 120px;
+  padding: 10px;
+  background-color: #101019;
+  margin: 10px auto;
+  outline: 0.2px solid #363449;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.songsCard .links{
+  /* background-color: #14700499; */
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.songsCard .spotify i{
+  color: lawngreen;
+  font-size: 2rem;
+}
+
+.songsCard .youtube i{
+  color: orangered;
+  font-size: 2rem;
+}
+
+.songsCard .linkDisabled{
+  opacity: 0.3;
+}
+
+.charactersCard{
+  display: flex;
+  padding: 10px;
+  margin: 10px auto;
+  justify-content: space-between;
+  background-color: #1e242ebe;
+  backdrop-filter: blur(1px);
+  border-radius: 10px;
+}
+
+.charactersCard img{
+  width: 90px;
+  height: 130px;
+  border-radius: 8px;
+  margin: 5px;
+}
+
+.charactersCard .character{
+  display: flex;
+}
+
+.charactersCard .voice_actorName, .charactersCard .lang{
+  text-align: right;
+  padding: 7px 0;
+}
+
+.charactersCard .lang,
+.charactersCard .type{
+  opacity: .5;
+}
+
+.charactersCard .charName{
+  margin: 7px 0;
+}
+
+.charactersCard .characterInfo{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 130px;
+}
+
+.voice_actorsCard{
+  display: flex;
+}
+.voice_actorsCard .voice_actorsInfo{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 /* _____________________________ */
 /* Media queries */
 
 @media (min-width: 900px){
+
   .currentAnime{
     width: 900px;
     margin: auto;
@@ -649,6 +733,25 @@ footer p {
 }
 
 @media (min-width: 700px) {
+  .charactersCard img{
+    width: 135px;
+    height: 190px;
+  }
+
+  .charactersCard .characterInfo{
+    height: 190px;
+  }
+
+  .charactersCard .voice_actorName, .charactersCard .lang{
+    width: 200px;
+    text-align: right;
+  }
+
+  .charactersCard{
+    display: flex;
+    width: 80%;
+  }
+
   .animeBox .desc{
     display: none;
   }

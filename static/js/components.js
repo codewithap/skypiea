@@ -1,10 +1,4 @@
 
-
-function strip(string) {
-  return string.replace(/^\s+|\s+$/g, '');
-}
-
-
 // Featured Animes //
 function getFeaturedAnimes(container, Type, no){
   fetch(`https://aniapi-eight.vercel.app/api/topAnimes?type=${Type}&page=1`)
@@ -224,7 +218,11 @@ function nextCotainer(x){
   animeContainer.forEach(e =>{
     e.style.display = "none";
   });
-  animeContainer[x - 1].style.display = "block";
+  if(x == 4){
+    animeContainer[x - 1].style.display = "flex";
+  } else {
+    animeContainer[x - 1].style.display = "block";
+  }
   
   buttons.forEach(e => {
     e.style.color = "#fff";
@@ -247,6 +245,7 @@ function animeInfo(malId){
   animeContainer[0].style.display = "block";
   sessionStorage.removeItem("epIds_saved");
   sessionStorage.removeItem("currentAnimeName");
+  sessionStorage.removeItem("fetched_charactersInfo");
   getInfo(malId)
 }
 
@@ -256,8 +255,13 @@ buttons[1].addEventListener("click", ()=>{
     let name = sessionStorage.getItem("currentAnimeName");
     getAnimes(name);
   }
-  else if(sessionStorage.getItem("epIds_saved") != null){
-    getAnimesFromSessionStorage()
+});
+
+buttons[2].addEventListener("click", ()=>{
+  if(sessionStorage.getItem("fetched_charactersInfo") == null){
+    sessionStorage.setItem("fetched_charactersInfo", true);
+    let mal_id = sessionStorage.getItem("mal_id");
+    getAnime_characters(mal_id);
   }
 });
 
@@ -267,6 +271,7 @@ function getInfo(malid){
     return response.json();
   }).then(data => {
     sessionStorage.setItem("currentAnimeName", data["info"]["english"]);
+    sessionStorage.setItem("mal_id", data["mal_id"]);
      let infoHtml = ``;
     let info = data["info"];
     for(let key in info){
@@ -308,10 +313,49 @@ function getInfo(malid){
     `;
     scrollX(document.querySelector(".otherAniInfo"));
 
-    let songs = data["theme_songs"]
-    for(let song in songs){
+    let openingSongs = data["theme_songs"]["opening"];
+    let endingSongs = data["theme_songs"]["ending"];
+    
+    for(let i in openingSongs){
+      let spotify, youtube ;
+      if(openingSongs[i]["spotify"] != ""){
+        spotify = `<a class="spotify" target="_blank" href="${openingSongs[i]["spotify"]}"><i class="bi bi-spotify"></i></a>`;
+      } else {
+        spotify = `<a class="spotify linkDisabled" target="_blank" href="#"><i class="bi bi-spotify"></i></a> `;
+      }
+
+      if(openingSongs[i]["youtube"] != ""){
+        youtube = `<a class="youtube" target="_blank" href="${openingSongs[i]["youtube"]}"><i class="bi bi-youtube"></i></a>`;
+      } else {
+        youtube = `<a class="youtube linkDisabled" target="_blank" href="#"><i class="bi bi-youtube"></i></a> `;
+      }
+
       animeContainer[3].innerHTML += `
-      <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${songs[song]}?utm_source=generator" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      <div class="songsCard">
+        <div class="name">${openingSongs[i]["name"].replace(`${i+1}:`,"")}</div>
+        <div class="links">${spotify} ${youtube}</div>
+      </div>
+    `;
+    }
+    for(let i in endingSongs){
+      let spotify, youtube ;
+      if(endingSongs[i]["spotify"] != ""){
+        spotify = `<a class="spotify" target="_blank" href="${endingSongs[i]["spotify"]}"><i class="bi bi-spotify"></i></a>`;
+      } else {
+        spotify = `<a class="spotify linkDisabled" href="#"><i class="bi bi-spotify"></i></a> `;
+      }
+
+      if(endingSongs[i]["youtube"] != ""){
+        youtube = `<a class="youtube" target="_blank" href="${endingSongs[i]["youtube"]}"><i class="bi bi-youtube"></i></a>`;
+      } else {
+        youtube = `<a class="youtube linkDisabled" href="#"><i class="bi bi-youtube"></i></a> `;
+      }
+
+      animeContainer[3].innerHTML += `
+      <div class="songsCard">
+        <div class="name">${endingSongs[i]["name"].replace(`${i+1}:`,"")}</div>
+        <div class="links">${spotify} ${youtube}</div>
+      </div>
     `;
     }
   
@@ -319,6 +363,44 @@ function getInfo(malid){
     console.error(error)
   });
 }
+
+async function getAnime_characters(malId) {
+  animeContainer[2].innerHTML = "";
+  try {
+      const response = await fetch(`https://aniapi-eight.vercel.app/api/characters?id=${malId}`);
+      const data = await response.json();
+      const characters = data.data;
+
+      let html = "";
+      for (const character of characters) {
+        const voiceActorsHtml = `
+        <div class="voice_actorsCard">
+            <div class="voice_actorsInfo">
+                <div class="voice_actorName">${character["voice_actors"]["name"]}</div>
+                <div class="lang">${character["voice_actors"]["lang"]}</div>
+            </div>
+            <img src="https://cdn.myanimelist.net/images/${character["voice_actors"]["img"]}">
+        </div>`
+    
+          html += `
+              <div class="charactersCard">
+                  <div class="character">
+                      <img src="https://cdn.myanimelist.net/images${character.img}">
+                      <div class="characterInfo">
+                          <div class="charName">${character.name}</div>
+                          <div class="type">${character.type}</div>
+                      </div>
+                  </div>
+                  <div class="voice_actors">${voiceActorsHtml}</div>
+              </div>`;
+      }
+
+      animeContainer[2].innerHTML = html;
+  } catch (error) {
+      console.error("Error fetching character data:", error);
+  }
+}
+
 
 var epRangeOpened = false;
 function getAnimes(name_eng){
@@ -330,8 +412,6 @@ function getAnimes(name_eng){
     .then(response => {
       return response.json();
     }).then(data => {
-
-
       let epis = data["episodes"]
       let episHtml = ""
       for (let i = 0; i < epis.length; i++) {
@@ -340,7 +420,6 @@ function getAnimes(name_eng){
         } else {
           episHtml += `<button style="display: none" onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn ep${i+1}"> ${i + 1} </button>`;
         }
-        
       }
       animeContainer[1].innerHTML =`
       <div class="video">
@@ -389,11 +468,7 @@ function getAnimes(name_eng){
       for (let i = 0; i < epPageNo; i++) {
         pageOption.innerHTML += '<span onclick="changeList('+i+')">'+`${100*i + 1} - ${100*(i+1)}`+'</span>'
       }
-    
-    
-    
-    
-    
+
     }).catch(error => {
       console.error(error)
     });
@@ -419,9 +494,6 @@ function changeList(i){
   epRangeOpened = false;
 }
 
-function getAnimesFromSessionStorage(){
-    console.log("working!!!!")
-}
 
 function getEpisM3u8(gogoEpId, i){
   fetch(`https://aniapi-eight.vercel.app/api/anime/ep?epid=${gogoEpId}`)
