@@ -236,13 +236,14 @@ sBtn.addEventListener('click', function(e){searchAnime()});
 
 async function searchAnime(){
   let input = searchBox.querySelector(".search-box input").value;
+  closeWatchAnime();
   try {
     const response = await fetch(`https://aniapi-eight.vercel.app/api/search?q=${input}&page=1`);
     const data = await response.json();
     const pagesInfo = data.pagination;
     let html = "";
     for (let item of data.items){
-      html += `<div onclick="animeInfo(${item.mal_id})" class="card fx">
+      html += `<div onclick="animeInfo(${item.mal_id}); closeSearch()" class="card fx">
       <div class="rank" style="border-radius: 8px;"><i style="color: yellow" class="bi bi-star-fill"></i> &nbsp;${item.score}</div>
         <div class="image">
           <div class="card_bg2"></div>
@@ -257,6 +258,11 @@ async function searchAnime(){
     console.error(error)
   }
 }
+
+function closeSearch(){
+  document.querySelector(".nav_btns .search").click()
+}
+
 
 
 /////////////////////////////////////////////////////
@@ -347,6 +353,29 @@ function getInfo(malid){
       }
     }
 
+    let relations = data["related_animes"]
+    let relationsHtml = '';
+    for (let animes of relations){
+      let animeNames = ""
+      for (let anime of animes.list){
+        animeNames += `
+          <a href="#${anime.name}" >${anime.name}</a>,&nbsp;
+        `;
+      }
+      relationsHtml += `
+        <table>
+          <tr>
+            <th>
+              ${animes.name}
+            </th>
+            <td>
+            ${animeNames}
+            </td>
+          </tr>
+        </table>
+      `;
+    }
+
     animeContainer[0].innerHTML = `
     <div class="anisContent">
 
@@ -366,6 +395,9 @@ function getInfo(malid){
     <div class="otherAniInfo">${infoHtml}</div>
     <br>
     <div class="desc">${data["description"]}</div>
+    <div class="relations">
+      ${relationsHtml}
+    </div>
     <br>
     </div>
     `;
