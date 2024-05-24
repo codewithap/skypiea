@@ -451,7 +451,8 @@ footer p {
 }
 
 .otherAniInfo{
-  width: 100%;
+  max-width: 100%;
+  min-width: 250px;
   margin: auto;
   display: flex;
   overflow-x: auto;
@@ -695,6 +696,44 @@ footer p {
   flex-direction: column;
   justify-content: space-between;
 }
+
+.relatedAnime{
+  display: flex;
+  background-color: #1e242ebe;
+  padding: 10px;
+  border-radius: 8px;
+  width: 95%;
+  margin: 10px auto;
+  height: 105px;
+  cursor: pointer;
+}
+
+.relatedAnime:hover{
+  color: royalblue;
+  transition: 100ms;
+}
+
+.relations{
+  width: calc(100%);
+}
+
+.relatedAnime img{
+  width: 60px;
+  height: 80px;
+  margin-right: 10px;
+  border-radius: 8px;
+}
+
+.relatedAnime small{
+  opacity: 0.6;
+}
+
+.relatedAnimeInfo{
+  display: flex;
+  flex-direction: column;
+  
+}
+
 
 /* _____________________________ */
 /* Media queries */

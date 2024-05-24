@@ -44,7 +44,6 @@ function topAnimes(popularCards, Type, no){
   .then(response => {
     return response.json();
   }).then(data => {
-    console.log(data);
     let SlidesList = data['items'];
     for (let i = 0; i < no; i++) {
       popularCards.innerHTML += `
@@ -117,7 +116,6 @@ function scrollX(slider){
 
 /////  slider /////
 let slider = document.querySelector('.slideShow .slider');
-console.log(slider.offsetWidth)
 slider.style.height = `${1.3*(slider.offsetWidth)}px`;
 let counter = 0;
   // image Slide show //
@@ -212,26 +210,6 @@ sInput.addEventListener('keypress', function (e) {
   }
 });
 sBtn.addEventListener('click', function(e){searchAnime()});
-
-
-// {
-//   "imgs": {
-  //   "jpg": {
-    //   "large": "https://cdn.myanimelist.net/images/anime/1565/111305l.jpg",
-    //   "medium": "https://cdn.myanimelist.net/images/anime/1565/111305.jpg",
-    //   "small": "https://cdn.myanimelist.net/r/100x140/images/anime/1565/111305.jpg?s=804f7255a1dbc534340acc4a1714a36e"
-  //   },
-  //   "webp": {
-    //   "large": "https://cdn.myanimelist.net/images/anime/1565/111305l.webp",
-    //   "medium": "https://cdn.myanimelist.net/images/anime/1565/111305.webp"
-  //   }
-//   },
-//   "mal_id": 1735,
-//   "score": "8.27",
-//   "title": "Naruto: Shippuuden",
-//   "type": "TV",
-//   "url": "https://myanimelist.net/anime/1735/Naruto__Shippuuden"
-//   },
 
 
 async function searchAnime(){
@@ -353,27 +331,21 @@ function getInfo(malid){
       }
     }
 
-    let relations = data["related_animes"]
+    let animes = data["related_animes"]
     let relationsHtml = '';
-    for (let animes of relations){
-      let animeNames = ""
-      for (let anime of animes.list){
-        animeNames += `
-          <a href="#${anime.name}" >${anime.name}</a>,&nbsp;
-        `;
+    for (let anime of animes){
+      if (anime.link.split("/")[3] != "manga"){
+        let type = anime.type.split("\n")[1].replaceAll(" ", "")
+        if (type == "Prequel" || type == "Sequel"){
+          relationsHtml += `<div class="relatedAnime" onclick="closeWatchAnime(); animeInfo(${anime.link.split("/")[4]})">
+          <img src="${anime.img.split("?s=")[0].replace("r/50x70/", "")}">
+          <div class="relatedAnimeInfo">
+            ${anime.name} <br>
+            <small>${type}</small>
+          </div>
+          </div>`;
+        }
       }
-      relationsHtml += `
-        <table>
-          <tr>
-            <th>
-              ${animes.name}
-            </th>
-            <td>
-            ${animeNames}
-            </td>
-          </tr>
-        </table>
-      `;
     }
 
     animeContainer[0].innerHTML = `
@@ -395,12 +367,12 @@ function getInfo(malid){
     <div class="otherAniInfo">${infoHtml}</div>
     <br>
     <div class="desc">${data["description"]}</div>
-    <div class="relations">
-      ${relationsHtml}
+    <div class="relations">${relationsHtml}
     </div>
     <br>
     </div>
     `;
+
     scrollX(document.querySelector(".otherAniInfo"));
 
     let openingSongs = data["theme_songs"]["opening"];
@@ -573,7 +545,6 @@ function changeList(i){
   let epis = document.querySelectorAll(".epis_btns button");
   pageOption.style.height = "0";
   
-  console.log(epis);
   for (let x = 0; x < epis.length; x++) {
     if(x > (100*i - 1) && x < (100*(i+1)) ){
       epis[x].style.display = "block";
@@ -595,10 +566,8 @@ function getEpisM3u8(gogoEpId, i){
     .then(response => {
       return response.json();
     }).then(data => {
-      console.log(data)
       let file1 = data["source"][0]["file"]
       let file2 = data["source_bk"][0]["file"]
-      console.log(file1, file2)
       let video = document.querySelector(".m3u8");
       html = `
       <iframe class="m3u8" frameborder="0" src="/play?m3u8=${file1}&m3u8_2=${file2}" style="width: 100%;height: 100%">
