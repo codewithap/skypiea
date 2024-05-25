@@ -43,7 +43,8 @@ height: 100%;
       player.addEventListener('error', onPlayerErrorEvent);
       controls.addEventListener('error', onUIErrorEvent);
       const config = {
-        'controlPanelElements': ['play_pause','mute','time_and_duration','spacer','fullscreen',"picture_in_picture","captions", "Statistics","overflow_menu"]
+        'controlPanelElements': ['play_pause','mute','time_and_duration','spacer', 'fullscreen',"picture_in_picture","captions", 'forward' , "statistics","overflow_menu"],
+        'fastForwardRates': [2, 4, 8, 1],
       }
 
       //["controlPanelElements", "addSeekBar", "addPlayPauseButton", "addMuteButton", "addFullscreenButton"]
