@@ -13,7 +13,7 @@ function getFeaturedAnimes(container, Type, no){
     let epNo = list[i]["otherInfo"].split("\n")[0].split("(")[1].replace("eps)","");
     let score = list[i]["score"];
     container.innerHTML += `
-    <div class="featured-anime-card" onclick='animeInfo(${list[i]["mal_id"]})'>
+    <div class="featured-anime-card" onclick='animeInfo(${list[i]["mal_id"]}, `+ `\`${title.replaceAll('"','')}\`` + `)'>
     <img draggable="false" src="${imgUrl}" alt="${title}">
     <div class="details">
         <strong class="featured-anime-card_name">
@@ -47,7 +47,7 @@ function topAnimes(popularCards, Type, no){
     let SlidesList = data['items'];
     for (let i = 0; i < no; i++) {
       popularCards.innerHTML += `
-      <div onclick='animeInfo(${SlidesList[i]["mal_id"]})' class="card fx" style="transform: translateX(${i}px)">
+      <div onclick='animeInfo(${SlidesList[i]["mal_id"]}, \`${SlidesList[i]['title'].replaceAll('"','')}\`)' class="card fx" style="transform: translateX(${i}px)">
   <div class="rank">#${i+1}</div>
     <div class="image">
       <div class="card_bg2"></div>
@@ -144,7 +144,7 @@ fetch('https://aniapi-eight.vercel.app/api/topAnimes?page=1')
       
       </div>
   </div><br>
-  <button onclick='animeInfo(${SlidesList[i]["mal_id"]})' class='watchBtn'><span class="material-symbols-rounded">play_arrow</span> START WATCHING</button></span><span class='bg'></span><img src='${SlidesList[i]['imgs']['webp']['large']}'>
+  <button onclick="animeInfo(${SlidesList[i]["mal_id"]}, \`${SlidesList[i]['title'].replaceAll('"','')}\`)" class='watchBtn'><span class="material-symbols-rounded">play_arrow</span> START WATCHING</button></span><span class='bg'></span><img src='${SlidesList[i]['imgs']['webp']['large']}'>
   </div></div>`;
 }
   }).catch(error => {
@@ -221,7 +221,7 @@ async function searchAnime(){
     const pagesInfo = data.pagination;
     let html = "";
     for (let item of data.items){
-      html += `<div onclick="animeInfo(${item.mal_id}); closeSearch()" class="card fx">
+      html += `<div onclick="animeInfo(${item.mal_id}, \`${item.title.replaceAll('"','')}\`); closeSearch()" class="card fx">
       <div class="rank" style="border-radius: 8px;"><i style="color: yellow" class="bi bi-star-fill"></i> &nbsp;${item.score}</div>
         <div class="image">
           <div class="card_bg2"></div>
@@ -272,7 +272,7 @@ function nextCotainer(x){
   buttons[x - 1].style.color = "limegreen";
 }
 
-function animeInfo(malId){
+function animeInfo(malId, name2){
   animeContainer[0].innerHTML = "";
   animeContainer[3].innerHTML = "";
   watchAnimeBox.style.display = "block";
@@ -288,14 +288,15 @@ function animeInfo(malId){
   sessionStorage.removeItem("epIds_saved");
   sessionStorage.removeItem("currentAnimeName");
   sessionStorage.removeItem("fetched_charactersInfo");
-  getInfo(malId)
+  getInfo(malId, name2)
 }
 
 buttons[1].addEventListener("click", ()=>{
   if(sessionStorage.getItem("epIds_saved") == null){
     sessionStorage.setItem("epIds_saved", true);
     let name = sessionStorage.getItem("currentAnimeName");
-    getAnimes(name);
+    let name2 = sessionStorage.getItem("currentAnimeName2");
+    getAnimeEpis(name, name2);
   }
 });
 
@@ -307,12 +308,16 @@ buttons[2].addEventListener("click", ()=>{
   }
 });
 
-function getInfo(malid){
+
+// "episodes": "Unknown",
+function getInfo(malid, name2){
   fetch(`https://aniapi-eight.vercel.app/api/anime?id=${malid}`)
   .then(response => {
     return response.json();
   }).then(data => {
     sessionStorage.setItem("currentAnimeName", data["info"]["english"]);
+    sessionStorage.setItem("currentAnimeName2", name2);
+    sessionStorage.setItem("currentAnimeEpis", data["info"]["episodes"]);
     sessionStorage.setItem("mal_id", data["mal_id"]);
      let infoHtml = ``;
     let info = data["info"];
@@ -337,7 +342,7 @@ function getInfo(malid){
       if (anime.link.split("/")[3] != "manga"){
         let type = anime.type.split("\n")[1].replaceAll(" ", "")
         if (type == "Prequel" || type == "Sequel"){
-          relationsHtml += `<div class="relatedAnime" onclick="closeWatchAnime(); animeInfo(${anime.link.split("/")[4]})">
+          relationsHtml += `<div class="relatedAnime" onclick="closeWatchAnime(); animeInfo(${anime.link.split("/")[4]}, \`${anime.name.trim().replaceAll('"','')}\`)">
           <img src="${anime.img.split("?s=")[0].replace("r/50x70/", "")}">
           <div class="relatedAnimeInfo">
             ${anime.name} <br>
@@ -465,79 +470,173 @@ async function getAnime_characters(malId) {
 
 
 var epRangeOpened = false;
-function getAnimes(name_eng){
-  fetch(`https://aniapi-eight.vercel.app/api/search/gogo?q=${name_eng}`)
-  .then(response => {
-    return response.json();
-  }).then(data => {
-    fetch(`https://aniapi-eight.vercel.app/api/anime/epis?gogoid=${data[0]["id"]}`)
-    .then(response => {
-      return response.json();
-    }).then(data => {
-      let epis = data["episodes"]
-      let episHtml = ""
-      for (let i = 0; i < epis.length; i++) {
-        if(i < 100){
-          episHtml += `<button onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn ep${i+1}"> ${i + 1} </button>`;
-        } else {
-          episHtml += `<button style="display: none" onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn ep${i+1}"> ${i + 1} </button>`;
-        }
+async function getAnimeEpis(name1, name2){
+  try {
+    
+    let response = await fetch(`https://aniapi-eight.vercel.app/api/search/gogo?q=${name1}`);
+    let data = await response.json();
+    let response2, data2;
+    let similarity1 = 0;
+    let similarity2 = 0;
+    if (data.length != 0){
+      response2 = await fetch(`https://aniapi-eight.vercel.app/api/anime/epis?gogoid=${data[0]["id"]}`);
+      data2 = await response2.json();
+      similarity1 = stringSimilarity.compareTwoStrings(name1, data2.title)
+    } else if (data.length == 0){
+      try{
+        console.log("retrying!!")
+        response = await fetch(`https://aniapi-eight.vercel.app/api/search/gogo?q=${name2}`);
+        data = await response.json();
+        response2 = await fetch(`https://aniapi-eight.vercel.app/api/anime/epis?gogoid=${data[0]["id"]}`);
+        data2 = await response2.json();
+        let similarity2 = data2stringSimilarity.compareTwoStrings(name2, data2.title)
+    } catch (error){
+      console.log(error)
+      data2 = {
+        "error": error
       }
-      animeContainer[1].innerHTML =`
-      <div class="video">
-        <div class="currentAnime">
-          <div class="m3u8">
-        
-          </div><br>
-          <p> You Are Watching <b></b> </p>
-        </div>
-        <div class="epis">
-          <div class="controls">
-            <div class="epRange">
-              <div class="selectedValue"> <b>1 - 100</b><span class="material-symbols-rounded">expand_more</span></div>
-              <span class="rangeList"></span>
-            </div>
-          </div>
-          <div class="epis_btns">${episHtml}</div>
-        </div>
+    }}
+    let similarity = Math.max(similarity1.toFixed(2), similarity2.toFixed(2))*100;
+    console.log(similarity)
+    console.log(data2)
+
+
+    let epis = data2.episodes;
+    let episHtml = ""
+    for (let i = 0; i < epis.length; i++) {
+      if(i < 100){
+        episHtml += `<button onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn ep${i+1}"> ${i + 1} </button>`;
+      } else {
+        episHtml += `<button style="display: none" onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn ep${i+1}"> ${i + 1} </button>`;
+      }
+    }
+    animeContainer[1].innerHTML =`
+    <div class="video">
+      <div class="currentAnime">
+        <div class="m3u8">
+      
+        </div><br>
+        <p> You Are Watching <b></b> </p>
       </div>
-      `;
-      getEpisM3u8(`${epis[0]}`, 0)
-      addEventListener('resize', () => {
-        let video = document.querySelector(".video .currentAnime");
-        let w = video.offsetWidth;
-        video.style.height = `${w/1.8 + 60}px`;
-      });
+      <div class="epis">
+        <div class="controls">
+          <div class="epRange">
+            <div class="selectedValue"> <b>1 - 100</b><span class="material-symbols-rounded">expand_more</span></div>
+            <span class="rangeList"></span>
+          </div>
+        </div>
+        <div class="epis_btns">${episHtml}</div>
+      </div>
+    </div>
+    `;
+    getEpisM3u8(`${epis[0]}`, 0)
+    addEventListener('resize', () => {
       let video = document.querySelector(".video .currentAnime");
       let w = video.offsetWidth;
       video.style.height = `${w/1.8 + 60}px`;
-      let epNo = epis.length;
-      let epPageNo = (Math.floor(epNo/100) + 1);
-
-      let pageOption = document.querySelector('.epis .controls .epRange .rangeList');
-      
-      let epRange = document.querySelector(".epRange .selectedValue");
-      epRange.addEventListener("click", ()=>{
-        if(!epRangeOpened){
-          pageOption.style.height= "120px";
-          epRangeOpened = true;
-        } else {
-          pageOption.style.height = "0";
-          epRangeOpened = false;
-        }
-      });
-      
-      for (let i = 0; i < epPageNo; i++) {
-        pageOption.innerHTML += '<span onclick="changeList('+i+')">'+`${100*i + 1} - ${100*(i+1)}`+'</span>'
-      }
-
-    }).catch(error => {
-      console.error(error)
     });
-  }).catch(error => {
-    console.error(error)
-  });
+    let video = document.querySelector(".video .currentAnime");
+    let w = video.offsetWidth;
+    video.style.height = `${w/1.8 + 60}px`;
+    let epNo = epis.length;
+    let epPageNo = (Math.floor(epNo/100) + 1);
+
+    let pageOption = document.querySelector('.epis .controls .epRange .rangeList');
+    
+    let epRange = document.querySelector(".epRange .selectedValue");
+    epRange.addEventListener("click", ()=>{
+      if(!epRangeOpened){
+        pageOption.style.height= "120px";
+        epRangeOpened = true;
+      } else {
+        pageOption.style.height = "0";
+        epRangeOpened = false;
+      }
+    });
+    
+    for (let i = 0; i < epPageNo; i++) {
+      pageOption.innerHTML += '<span onclick="changeList('+i+')">'+`${100*i + 1} - ${100*(i+1)}`+'</span>'
+    }
+
+
+  } catch (error){
+    console.log(error)
+  }
 }
+
+
+//   fetch(`https://aniapi-eight.vercel.app/api/search/gogo?q=${name_eng}`)
+//   .then(response => {
+//     return response.json();
+//   }).then(data => {
+//     fetch(`https://aniapi-eight.vercel.app/api/anime/epis?gogoid=${data[0]["id"]}`)
+//     .then(response => {
+//       return response.json();
+//     }).then(data => {
+//       let epis = data["episodes"]
+//       let episHtml = ""
+//       for (let i = 0; i < epis.length; i++) {
+//         if(i < 100){
+//           episHtml += `<button onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn ep${i+1}"> ${i + 1} </button>`;
+//         } else {
+//           episHtml += `<button style="display: none" onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn ep${i+1}"> ${i + 1} </button>`;
+//         }
+//       }
+//       animeContainer[1].innerHTML =`
+//       <div class="video">
+//         <div class="currentAnime">
+//           <div class="m3u8">
+        
+//           </div><br>
+//           <p> You Are Watching <b></b> </p>
+//         </div>
+//         <div class="epis">
+//           <div class="controls">
+//             <div class="epRange">
+//               <div class="selectedValue"> <b>1 - 100</b><span class="material-symbols-rounded">expand_more</span></div>
+//               <span class="rangeList"></span>
+//             </div>
+//           </div>
+//           <div class="epis_btns">${episHtml}</div>
+//         </div>
+//       </div>
+//       `;
+//       getEpisM3u8(`${epis[0]}`, 0)
+//       addEventListener('resize', () => {
+//         let video = document.querySelector(".video .currentAnime");
+//         let w = video.offsetWidth;
+//         video.style.height = `${w/1.8 + 60}px`;
+//       });
+//       let video = document.querySelector(".video .currentAnime");
+//       let w = video.offsetWidth;
+//       video.style.height = `${w/1.8 + 60}px`;
+//       let epNo = epis.length;
+//       let epPageNo = (Math.floor(epNo/100) + 1);
+
+//       let pageOption = document.querySelector('.epis .controls .epRange .rangeList');
+      
+//       let epRange = document.querySelector(".epRange .selectedValue");
+//       epRange.addEventListener("click", ()=>{
+//         if(!epRangeOpened){
+//           pageOption.style.height= "120px";
+//           epRangeOpened = true;
+//         } else {
+//           pageOption.style.height = "0";
+//           epRangeOpened = false;
+//         }
+//       });
+      
+//       for (let i = 0; i < epPageNo; i++) {
+//         pageOption.innerHTML += '<span onclick="changeList('+i+')">'+`${100*i + 1} - ${100*(i+1)}`+'</span>'
+//       }
+
+//     }).catch(error => {
+//       console.error(error)
+//     });
+//   }).catch(error => {
+//     console.error(error)
+//   });
+// }
 
 function changeList(i){
   document.querySelector(".selectedValue b").innerHTML = `${100*i + 1} - ${100*(i+1)}`;
