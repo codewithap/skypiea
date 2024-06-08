@@ -489,7 +489,7 @@ async function getAnimeEpis(name1, name2){
         data = await response.json();
         response2 = await fetch(`https://aniapi-eight.vercel.app/api/anime/epis?gogoid=${data[0]["id"]}`);
         data2 = await response2.json();
-        let similarity2 = data2stringSimilarity.compareTwoStrings(name2, data2.title)
+        let similarity2 = stringSimilarity.compareTwoStrings(name2, data2.title)
     } catch (error){
       console.log(error)
       data2 = {
@@ -564,79 +564,6 @@ async function getAnimeEpis(name1, name2){
   }
 }
 
-
-//   fetch(`https://aniapi-eight.vercel.app/api/search/gogo?q=${name_eng}`)
-//   .then(response => {
-//     return response.json();
-//   }).then(data => {
-//     fetch(`https://aniapi-eight.vercel.app/api/anime/epis?gogoid=${data[0]["id"]}`)
-//     .then(response => {
-//       return response.json();
-//     }).then(data => {
-//       let epis = data["episodes"]
-//       let episHtml = ""
-//       for (let i = 0; i < epis.length; i++) {
-//         if(i < 100){
-//           episHtml += `<button onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn ep${i+1}"> ${i + 1} </button>`;
-//         } else {
-//           episHtml += `<button style="display: none" onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn ep${i+1}"> ${i + 1} </button>`;
-//         }
-//       }
-//       animeContainer[1].innerHTML =`
-//       <div class="video">
-//         <div class="currentAnime">
-//           <div class="m3u8">
-        
-//           </div><br>
-//           <p> You Are Watching <b></b> </p>
-//         </div>
-//         <div class="epis">
-//           <div class="controls">
-//             <div class="epRange">
-//               <div class="selectedValue"> <b>1 - 100</b><span class="material-symbols-rounded">expand_more</span></div>
-//               <span class="rangeList"></span>
-//             </div>
-//           </div>
-//           <div class="epis_btns">${episHtml}</div>
-//         </div>
-//       </div>
-//       `;
-//       getEpisM3u8(`${epis[0]}`, 0)
-//       addEventListener('resize', () => {
-//         let video = document.querySelector(".video .currentAnime");
-//         let w = video.offsetWidth;
-//         video.style.height = `${w/1.8 + 60}px`;
-//       });
-//       let video = document.querySelector(".video .currentAnime");
-//       let w = video.offsetWidth;
-//       video.style.height = `${w/1.8 + 60}px`;
-//       let epNo = epis.length;
-//       let epPageNo = (Math.floor(epNo/100) + 1);
-
-//       let pageOption = document.querySelector('.epis .controls .epRange .rangeList');
-      
-//       let epRange = document.querySelector(".epRange .selectedValue");
-//       epRange.addEventListener("click", ()=>{
-//         if(!epRangeOpened){
-//           pageOption.style.height= "120px";
-//           epRangeOpened = true;
-//         } else {
-//           pageOption.style.height = "0";
-//           epRangeOpened = false;
-//         }
-//       });
-      
-//       for (let i = 0; i < epPageNo; i++) {
-//         pageOption.innerHTML += '<span onclick="changeList('+i+')">'+`${100*i + 1} - ${100*(i+1)}`+'</span>'
-//       }
-
-//     }).catch(error => {
-//       console.error(error)
-//     });
-//   }).catch(error => {
-//     console.error(error)
-//   });
-// }
 
 function changeList(i){
   document.querySelector(".selectedValue b").innerHTML = `${100*i + 1} - ${100*(i+1)}`;
