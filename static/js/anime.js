@@ -253,6 +253,9 @@ function closeWatchAnime(){
   watchAnimeBox.style.display = "none";
   sessionStorage.removeItem("epIds_saved");
   sessionStorage.removeItem("currentAnimeName");
+  sessionStorage.removeItem("subEpisHtml");
+  sessionStorage.removeItem("dubEpisHtml");
+  sessionStorage.removeItem("changelistValue")
   animeContainer[1].innerHTML = ""
 }
 
@@ -470,6 +473,8 @@ async function getAnime_characters(malId) {
 
 
 var epRangeOpened = false;
+var epLangOpened = false;
+
 async function getAnimeEpis(name1, name2){
   try {
     
@@ -497,19 +502,72 @@ async function getAnimeEpis(name1, name2){
       }
     }}
     let similarity = Math.max(similarity1.toFixed(2), similarity2.toFixed(2))*100;
+
+
+
     console.log(similarity)
-    console.log(data2)
-
-
+    console.log(data[0]["id"].includes("dub"))
+    
+    let z;
     let epis = data2.episodes;
-    let episHtml = ""
-    for (let i = 0; i < epis.length; i++) {
-      if(i < 100){
-        episHtml += `<button onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn ep${i+1}"> ${i + 1} </button>`;
-      } else {
-        episHtml += `<button style="display: none" onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn ep${i+1}"> ${i + 1} </button>`;
+    var episHtml = "";
+    var dubEpisHtml = "";
+    let dubEpisData;
+    if(data.length != 0 && data[0]["id"].includes("dub") != true){
+      try{
+      let response3 = await fetch(`https://aniapi-eight.vercel.app/api/anime/epis?gogoid=${data[0]["id"]}-dub`);
+      dubEpisData = await response3.json();
+      for (let i = 0; i < dubEpisData.episodes.length; i++) {
+        if(i < 100){
+          dubEpisHtml += `<button onclick='getEpisM3u8("${dubEpisData.episodes[i]}", ${i})' class="epBtn dub ep${i+1}"> ${i + 1} </button>`;
+        } else {
+          dubEpisHtml += `<button style="display: none" onclick='getEpisM3u8("${dubEpisData.episodes[i]}", ${i})' class="epBtn dub ep${i+1}"> ${i + 1} </button>`;
+        }
+      }
+  
+    } catch (error){
+      console.log(error)
+    }
+    } else if (data.length != 0 && data[0]["id"].includes("dub") == true){
+      try{
+        z = true;
+        let response3 = await fetch(`https://aniapi-eight.vercel.app/api/anime/epis?gogoid=${data[0]["id"].replace("-dub", "")}`);
+        dubEpisData = await response3.json();
+        for (let i = 0; i < dubEpisData.episodes.length; i++) {
+          if(i < 100){
+            dubEpisHtml += `<button onclick='getEpisM3u8("${dubEpisData.episodes[i]}", ${i})' class="epBtn sub ep${i+1}"> ${i + 1} </button>`;
+          } else {
+            dubEpisHtml += `<button style="display: none" onclick='getEpisM3u8("${dubEpisData.episodes[i]}", ${i})' class="epBtn sub ep${i+1}"> ${i + 1} </button>`;
+          }
+        }
+    
+      } catch (error){
+        console.log(error)
       }
     }
+    
+
+    if(z != true){
+      for (let i = 0; i < epis.length; i++) {
+        if(i < 100){
+          episHtml += `<button onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn sub ep${i+1}"> ${i + 1} </button>`;
+        } else {
+          episHtml += `<button style="display: none" onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn sub ep${i+1}"> ${i + 1} </button>`;
+        }
+      }
+    }
+    else if (z == true){
+      for (let i = 0; i < epis.length; i++) {
+        if(i < 100){
+          episHtml += `<button onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn dub ep${i+1}"> ${i + 1} </button>`;
+        } else {
+          episHtml += `<button style="display: none" onclick='getEpisM3u8("${epis[i]}", ${i})' class="epBtn dub ep${i+1}"> ${i + 1} </button>`;
+        }
+      }
+    }
+    
+    sessionStorage.setItem("subEpisHtml", episHtml);
+    sessionStorage.setItem("dubEpisHtml", dubEpisHtml);
     animeContainer[1].innerHTML =`
     <div class="video">
       <div class="currentAnime">
@@ -524,11 +582,26 @@ async function getAnimeEpis(name1, name2){
             <div class="selectedValue"> <b>1 - 100</b><span class="material-symbols-rounded">expand_more</span></div>
             <span class="rangeList"></span>
           </div>
+
+          <div class="epLang">
+            <div class="epLangs">
+            <div class="selectedLangValue"> <b>SUB</b><span class="material-symbols-rounded">expand_more</span></div>
+            <span class="langList">
+              <span onclick="changeLang('sub')"> SUB </span>
+              <span onclick="changeLang('dub')"> DUB </span>
+            </span>
+            </div>
+          </div>
+
+          
         </div>
         <div class="epis_btns">${episHtml}</div>
+        
       </div>
     </div>
     `;
+
+    if(z == true){document.querySelector(".selectedLangValue b").innerHTML = "DUB";}
     getEpisM3u8(`${epis[0]}`, 0)
     addEventListener('resize', () => {
       let video = document.querySelector(".video .currentAnime");
@@ -542,8 +615,10 @@ async function getAnimeEpis(name1, name2){
     let epPageNo = (Math.floor(epNo/100) + 1);
 
     let pageOption = document.querySelector('.epis .controls .epRange .rangeList');
+    let langOptions = document.querySelector('.epis .controls .epLang .langList');
     
     let epRange = document.querySelector(".epRange .selectedValue");
+    let epLang = document.querySelector(".epLang .selectedLangValue");
     epRange.addEventListener("click", ()=>{
       if(!epRangeOpened){
         pageOption.style.height= "120px";
@@ -553,10 +628,20 @@ async function getAnimeEpis(name1, name2){
         epRangeOpened = false;
       }
     });
+    epLang.addEventListener("click", ()=>{
+      if(!epLangOpened){
+        langOptions.style.height= "75px";
+        epLangOpened = true;
+      } else {
+        langOptions.style.height = "0";
+        epLangOpened = false;
+      }
+    });
     
     for (let i = 0; i < epPageNo; i++) {
       pageOption.innerHTML += '<span onclick="changeList('+i+')">'+`${100*i + 1} - ${100*(i+1)}`+'</span>'
     }
+
 
 
   } catch (error){
@@ -564,13 +649,29 @@ async function getAnimeEpis(name1, name2){
   }
 }
 
+function changeLang(lang){
+  let epis_btns = document.querySelector(".epis_btns");
+  let changelistValue = Number(sessionStorage.getItem("changelistValue"));
+  if(lang == "sub"){
+    epis_btns.innerHTML = sessionStorage.getItem("subEpisHtml");
+    document.querySelector(".selectedLangValue b").innerHTML = "SUB";
+  }
+  else if(lang == "dub"){
+    epis_btns.innerHTML = sessionStorage.getItem("dubEpisHtml");
+    document.querySelector(".selectedLangValue b").innerHTML = "DUB";
+  }
+  epLangOpened = false;
+  document.querySelector('.epis .controls .epLang .langList').style.height = "0";
+  changeList(changelistValue);
+}
 
 function changeList(i){
-  document.querySelector(".selectedValue b").innerHTML = `${100*i + 1} - ${100*(i+1)}`;
+  document.querySelector(".epRange .selectedValue b").innerHTML = `${100*i + 1} - ${100*(i+1)}`;
   let pageOption = document.querySelector('.epis .controls .epRange .rangeList');
   let epis = document.querySelectorAll(".epis_btns button");
   pageOption.style.height = "0";
-  
+  sessionStorage.removeItem("changelistValue")
+  sessionStorage.setItem("changelistValue", `${i}`);
   for (let x = 0; x < epis.length; x++) {
     if(x > (100*i - 1) && x < (100*(i+1)) ){
       epis[x].style.display = "block";

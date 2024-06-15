@@ -340,12 +340,8 @@ footer p {
   height: calc(100%);
   display: flex;
   padding: 46px 5px 20px 5px;
-  /* position: fixed;
-  top: 126px; */
-  /* overflow: auto; */
-  /* scroll-behavior: smooth; */
   overflow: hidden visible;
-  width: calc(100vw - 10px) !important;
+  width: calc(100vw - 0) !important;
 }
 
 .animeBox{
@@ -458,7 +454,7 @@ footer p {
   overflow-x: auto;
   cursor: grabbing;
   background-color: #00000034;
-  padding: 10px 0;
+  padding: 10px 15px;
   /* backdrop-filter: blur(6px); */
   border-radius: 8px;
   outline: 4px solid #00000034;
@@ -497,14 +493,18 @@ footer p {
   margin: auto;
 }
 
-.epRange{
+.epRange, .epLangs{
   width: 100%;
   height: 40px;
   border-radius: 5px;
   overflow: visible;
 }
 
-.epRange .rangeList{
+.controls{
+  display: flex;
+}
+
+.epRange .rangeList, .epLang .langList{
   display: flex;
   flex-direction: column;
   height: 0;
@@ -517,7 +517,7 @@ footer p {
   width: 120px;
 }
 
-.selectedValue{
+.selectedValue, .selectedLangValue{
   width: 120px;
   height: 40px;
   background-color: slateblue;
@@ -527,7 +527,7 @@ footer p {
   padding: 5px;
 }
 
-.selectedValue span{
+.selectedValue span, .selectedLangValue span{
   scale: 1.3;
   position: relative;
   top: 2px;
@@ -544,12 +544,12 @@ footer p {
   background-color: #101019;
 }
 
-.rangeList span{
+.rangeList span, .langList span{
   padding: 8px;
   border-bottom: 0.5px solid #33333377;
 }
 
-.rangeList span:hover, .rangeEpActive{
+.rangeList span:hover, .rangeEpActive, .langList span:hover{
   background-color: #dbdbdb94;
   transition: 50ms;
 }
