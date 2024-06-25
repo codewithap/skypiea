@@ -1,6 +1,7 @@
 
 // Featured Animes //
 function getFeaturedAnimes(container, Type, no){
+  loading(true);
   fetch(`https://aniapi-eight.vercel.app/api/topAnimes?type=${Type}&page=1`)
   .then(response => {
     return response.json();
@@ -32,8 +33,10 @@ function getFeaturedAnimes(container, Type, no){
 </div>
     `;
     }
+    loading(false);
   }).catch(error => {
-    console.error(error)
+    console.error(error);
+    loading(false);
   });
 }
 
@@ -213,6 +216,7 @@ sBtn.addEventListener('click', function(e){searchAnime()});
 
 
 async function searchAnime(){
+  loading(true);
   let input = searchBox.querySelector(".search-box input").value;
   closeWatchAnime();
   try {
@@ -232,8 +236,10 @@ async function searchAnime(){
       </div>`;
     }
     searchContainer.innerHTML = html;
+    loading(false);
   } catch (error){
-    console.error(error)
+    console.error(error);
+    loading(false);
   }
 }
 
@@ -255,7 +261,8 @@ function closeWatchAnime(){
   sessionStorage.removeItem("currentAnimeName");
   sessionStorage.removeItem("subEpisHtml");
   sessionStorage.removeItem("dubEpisHtml");
-  sessionStorage.removeItem("changelistValue")
+  sessionStorage.removeItem("changelistValue");
+  sessionStorage.removeItem("relationsHtml");
   animeContainer[1].innerHTML = ""
 }
 
@@ -311,9 +318,8 @@ buttons[2].addEventListener("click", ()=>{
   }
 });
 
-
-// "episodes": "Unknown",
 function getInfo(malid, name2){
+  loading(true);
   fetch(`https://aniapi-eight.vercel.app/api/anime?id=${malid}`)
   .then(response => {
     return response.json();
@@ -339,7 +345,7 @@ function getInfo(malid, name2){
       }
     }
 
-    let animes = data["related_animes"]
+    let animes = data["related_animes"];
     let relationsHtml = '';
     for (let anime of animes){
       if (anime.link.split("/")[3] != "manga"){
@@ -380,6 +386,8 @@ function getInfo(malid, name2){
     <br>
     </div>
     `;
+
+    sessionStorage.setItem("relationsHtml", relationsHtml);
 
     scrollX(document.querySelector(".otherAniInfo"));
 
@@ -428,13 +436,15 @@ function getInfo(malid, name2){
       </div>
     `;
     }
-  
+    loading(false);
   }).catch(error => {
-    console.error(error)
+    console.error(error);
+    loading(false)
   });
 }
 
 async function getAnime_characters(malId) {
+  loading(true);
   animeContainer[2].innerHTML = "";
   try {
       const response = await fetch(`https://aniapi-eight.vercel.app/api/characters?id=${malId}`);
@@ -466,8 +476,10 @@ async function getAnime_characters(malId) {
       }
 
       animeContainer[2].innerHTML = html;
+      loading(false);
   } catch (error) {
       console.error("Error fetching character data:", error);
+      loading(false);
   }
 }
 
@@ -476,6 +488,7 @@ var epRangeOpened = false;
 var epLangOpened = false;
 
 async function getAnimeEpis(name1, name2){
+  loading(true);
   try {
     
     let response = await fetch(`https://aniapi-eight.vercel.app/api/search/gogo?q=${name1}`);
@@ -568,6 +581,16 @@ async function getAnimeEpis(name1, name2){
     
     sessionStorage.setItem("subEpisHtml", episHtml);
     sessionStorage.setItem("dubEpisHtml", dubEpisHtml);
+    let relatedAnimes = sessionStorage.getItem("relationsHtml");
+    let RAhtml = ``;
+    if(relatedAnimes.length == 0){
+      RAhtml = ``;
+    } else {
+      RAhtml = `<div class="relatedAnimes" onclick="expandRAHtml()">
+          <h4>More Seasons</h4> <i class="bi bi-arrow-down-short"></i>
+        </div>
+        <div class="relatedAnimesHtml">${relatedAnimes}</div>`;
+    }
     animeContainer[1].innerHTML =`
     <div class="video">
       <div class="currentAnime">
@@ -577,6 +600,7 @@ async function getAnimeEpis(name1, name2){
         <p> You Are Watching <b></b> </p>
       </div>
       <div class="epis">
+        ${RAhtml}
         <div class="controls">
           <div class="epRange">
             <div class="selectedValue"> <b>1 - 100</b><span class="material-symbols-rounded">expand_more</span></div>
@@ -601,8 +625,11 @@ async function getAnimeEpis(name1, name2){
     </div>
     `;
 
+    
+
+
     if(z == true){document.querySelector(".selectedLangValue b").innerHTML = "DUB";}
-    getEpisM3u8(`${epis[0]}`, 0)
+    getEpisM3u8(`${epis[0]}`, 0);
     addEventListener('resize', () => {
       let video = document.querySelector(".video .currentAnime");
       let w = video.offsetWidth;
@@ -642,10 +669,22 @@ async function getAnimeEpis(name1, name2){
       pageOption.innerHTML += '<span onclick="changeList('+i+')">'+`${100*i + 1} - ${100*(i+1)}`+'</span>'
     }
 
-
+    loading(false);
 
   } catch (error){
     console.log(error)
+    loading(false);
+  }
+}
+let RAopened = false;
+function expandRAHtml(){
+  let relatedAnimesHtml = document.querySelector(".relatedAnimesHtml");
+  if(!RAopened){
+    relatedAnimesHtml.style.height = "180px";
+    RAopened = true;
+  } else if(RAopened){
+    relatedAnimesHtml.style.height = "0";
+    RAopened = false;
   }
 }
 

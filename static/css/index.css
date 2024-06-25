@@ -607,6 +607,34 @@ footer p {
   max-height: calc(100% - 40px);
 }
 
+.epis .relatedAnimes{
+  display: flex;
+  width: 95%;
+  margin: 10px auto;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+  border: 2px solid #b0b0b0;
+  border-radius: 50px;
+  backdrop-filter: brightness(150%);
+  cursor: pointer;
+}
+
+.epis .relatedAnimesHtml{
+  width: 95%;
+  margin: 0 auto 10px auto;
+  overflow: auto;
+  height: 0;
+  backdrop-filter: brightness(150%);
+  border-radius: 8px;
+   /* border: 2px solid #2e2e2e; */
+   transition: 200ms;
+}
+
+.epis .relatedAnimes i{
+  font-size: 2.3rem;
+}
+
 .animeSongs{
   flex-wrap: wrap;
   margin-bottom: 20px;
@@ -715,6 +743,17 @@ footer p {
 
 .relations{
   width: calc(100%);
+  
+}
+
+.video .relations{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  border: 0.5px dashed #fff;
+  margin: 10px 0;
+  overflow: auto;
+  height: 200px;
 }
 
 .relatedAnime img{
@@ -726,12 +765,12 @@ footer p {
 
 .relatedAnime small{
   opacity: 0.6;
+  text-align: left;
 }
 
 .relatedAnimeInfo{
   display: flex;
   flex-direction: column;
-  
 }
 
 
