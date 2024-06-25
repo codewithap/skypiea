@@ -732,8 +732,8 @@ function getEpisM3u8(gogoEpId, i){
     .then(response => {
       return response.json();
     }).then(data => {
-      let file1 = data["source"][0]["file"]
-      let file2 = data["source_bk"][0]["file"]
+      let file1 = data["source"][0]["file"];
+      let file2 = data["source_bk"][0]["file"];
       let video = document.querySelector(".m3u8");
       html = `
       <iframe class="m3u8" frameborder="0" src="/play?m3u8=${file1}&m3u8_2=${file2}" style="width: 100%;height: 100%">
