@@ -247,8 +247,6 @@ function closeSearch(){
   document.querySelector(".nav_btns .search").click()
 }
 
-
-
 /////////////////////////////////////////////////////
 
 let watchAnimeBox = document.querySelector(".watchAnime");
@@ -668,7 +666,8 @@ async function getAnimeEpis(name1, name2){
     for (let i = 0; i < epPageNo; i++) {
       pageOption.innerHTML += '<span onclick="changeList('+i+')">'+`${100*i + 1} - ${100*(i+1)}`+'</span>'
     }
-
+    
+    loadWatchedData(sessionStorage.getItem("mal_id"));
     loading(false);
 
   } catch (error){
@@ -691,6 +690,7 @@ function expandRAHtml(){
 function changeLang(lang){
   let epis_btns = document.querySelector(".epis_btns");
   let changelistValue = Number(sessionStorage.getItem("changelistValue"));
+  
   if(lang == "sub"){
     epis_btns.innerHTML = sessionStorage.getItem("subEpisHtml");
     document.querySelector(".selectedLangValue b").innerHTML = "SUB";
@@ -702,6 +702,7 @@ function changeLang(lang){
   epLangOpened = false;
   document.querySelector('.epis .controls .epLang .langList').style.height = "0";
   changeList(changelistValue);
+  loadWatchedData(sessionStorage.getItem("mal_id"));
 }
 
 function changeList(i){
@@ -732,6 +733,23 @@ function getEpisM3u8(gogoEpId, i){
     .then(response => {
       return response.json();
     }).then(data => {
+      document.querySelectorAll(`.ep1`)[0].classList.contains("btnActive")
+
+
+      let malId = sessionStorage.getItem("mal_id");
+      if(localStorage.getItem(`${malId}`) == null){
+        localStorage.setItem(`${malId}`, [i+1]);
+        localStorage.setItem(`${malId}_LastEp`, i+1); 
+      } else{
+        if(!document.querySelectorAll(`.ep${i+1}`)[0].classList.contains("btnActive")){
+          let arr = localStorage.getItem(`${malId}`).split(",");
+          arr.push(i+1);
+          localStorage.setItem(`${malId}`, arr); 
+          localStorage.setItem(`${malId}_LastEp`, i+1); 
+        }
+      }
+      document.querySelectorAll(`.ep${i+1}`)[0].classList.add("btnActive");
+      // document.querySelectorAll(`.ep${i+1}`)[1].classList.add("btnActive");
       let file1 = data["source"][0]["file"];
       let file2 = data["source_bk"][0]["file"];
       let video = document.querySelector(".m3u8");
@@ -746,4 +764,20 @@ function getEpisM3u8(gogoEpId, i){
   }).catch(error => {
     console.error(error)
   });
+}
+
+
+function loadWatchedData(mal_id){
+  let data = localStorage.getItem(mal_id);
+  if (data != null){
+    let arr = data.split(",");
+    let lastep = localStorage.getItem(`${mal_id}_LastEp`); 
+    
+    for(let item of arr){
+      document.querySelectorAll(`.ep${item}`)[0].classList.add("btnActive");
+    }
+    document.querySelector(`.ep${lastep}`).click();
+    changeList(Math.floor(lastep/100));
+  }
+
 }
