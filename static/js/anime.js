@@ -1,5 +1,3 @@
-
-// Featured Animes //
 function getFeaturedAnimes(container, Type, no){
   loading(true);
   fetch(`https://aniapi-eight.vercel.app/api/topAnimes?type=${Type}&page=1`)
@@ -40,8 +38,6 @@ function getFeaturedAnimes(container, Type, no){
   });
 }
 
-
-//  Top Animes  //
 function topAnimes(popularCards, Type, no){
   fetch(`https://aniapi-eight.vercel.app/api/topAnimes?type=${Type}&page=1`)
   .then(response => {
@@ -86,7 +82,7 @@ function openCloseNav() {
 openBtn.addEventListener("click", openCloseNav);
 closeBtn.addEventListener("click", openCloseNav);
 
-/////////////////  Scroll X click & drag  ////////////////////
+/////////////////  Scroll-X click & drag  ////////////////////
 function scrollX(slider){
   
   let isDown = false;
@@ -122,9 +118,6 @@ let slider = document.querySelector('.slideShow .slider');
 slider.style.height = `${1.3*(slider.offsetWidth)}px`;
 let counter = 0;
   // image Slide show //
-
-
-
 fetch('https://aniapi-eight.vercel.app/api/topAnimes?page=1')
   .then(response => {
       return response.json();
@@ -181,9 +174,7 @@ let next = () => {
 }
 setInterval(next, 8000);
 
-
 //////// search  /////////
-
 let searchBtn = document.querySelector('.nav-bar .search');
 let searchBox = document.querySelector(".search-box");
 let searchContainer = document.querySelector(".searchContainer");
@@ -246,7 +237,6 @@ async function searchAnime(){
 function closeSearch(){
   document.querySelector(".nav_btns .search").click()
 }
-
 /////////////////////////////////////////////////////
 
 let watchAnimeBox = document.querySelector(".watchAnime");
@@ -366,7 +356,7 @@ function getInfo(malid, name2){
       <div class="title">
         <img src="${data["imgs"]["webp"]["large"]}">
         <h1>${data["info"]["english"]}</h1>
-        <div><button onclick='document.querySelectorAll(".navigation .otherButtons button")[1].click()'>Watch Now</button> <button><span class="material-symbols-rounded">add</span></button></div>
+        <div><button onclick='document.querySelectorAll(".navigation .otherButtons button")[1].click()'>Watch Now</button> <button class="addToMyList" onclick="addToMyList(${malid}, '${name2}', '${data.imgs.webp.large}')"><span class="material-symbols-rounded">add</span></button></div>
       </div>
 
       <div class="anisInfo">
@@ -384,9 +374,7 @@ function getInfo(malid, name2){
     <br>
     </div>
     `;
-
     sessionStorage.setItem("relationsHtml", relationsHtml);
-
     scrollX(document.querySelector(".otherAniInfo"));
 
     let openingSongs = data["theme_songs"]["opening"];
@@ -481,10 +469,8 @@ async function getAnime_characters(malId) {
   }
 }
 
-
 var epRangeOpened = false;
 var epLangOpened = false;
-
 async function getAnimeEpis(name1, name2){
   loading(true);
   try {
@@ -514,10 +500,8 @@ async function getAnimeEpis(name1, name2){
     }}
     let similarity = Math.max(similarity1.toFixed(2), similarity2.toFixed(2))*100;
 
-
-
-    console.log(similarity)
-    console.log(data[0]["id"].includes("dub"))
+    // console.log(similarity)
+    // console.log(data[0]["id"].includes("dub"))
     
     let z;
     let epis = data2.episodes;
@@ -556,7 +540,6 @@ async function getAnimeEpis(name1, name2){
         console.log(error)
       }
     }
-    
 
     if(z != true){
       for (let i = 0; i < epis.length; i++) {
@@ -623,11 +606,7 @@ async function getAnimeEpis(name1, name2){
     </div>
     `;
 
-    
-
-
     if(z == true){document.querySelector(".selectedLangValue b").innerHTML = "DUB";}
-    getEpisM3u8(`${epis[0]}`, 0);
     addEventListener('resize', () => {
       let video = document.querySelector(".video .currentAnime");
       let w = video.offsetWidth;
@@ -722,7 +701,6 @@ function changeList(i){
   epRangeOpened = false;
 }
 
-
 function getEpisM3u8(gogoEpId, i){
   fetch(`https://aniapi-eight.vercel.app/api/anime/ep?epid=${gogoEpId}`)
   .then(response => {
@@ -733,9 +711,7 @@ function getEpisM3u8(gogoEpId, i){
     .then(response => {
       return response.json();
     }).then(data => {
-      document.querySelectorAll(`.ep1`)[0].classList.contains("btnActive")
-
-
+      document.querySelectorAll(`.ep1`)[0].classList.contains("btnActive");
       let malId = sessionStorage.getItem("mal_id");
       if(localStorage.getItem(`${malId}`) == null){
         localStorage.setItem(`${malId}`, [i+1]);
@@ -749,7 +725,6 @@ function getEpisM3u8(gogoEpId, i){
         }
       }
       document.querySelectorAll(`.ep${i+1}`)[0].classList.add("btnActive");
-      // document.querySelectorAll(`.ep${i+1}`)[1].classList.add("btnActive");
       let file1 = data["source"][0]["file"];
       let file2 = data["source_bk"][0]["file"];
       let video = document.querySelector(".m3u8");
@@ -767,17 +742,3 @@ function getEpisM3u8(gogoEpId, i){
 }
 
 
-function loadWatchedData(mal_id){
-  let data = localStorage.getItem(mal_id);
-  if (data != null){
-    let arr = data.split(",");
-    let lastep = localStorage.getItem(`${mal_id}_LastEp`); 
-    
-    for(let item of arr){
-      document.querySelectorAll(`.ep${item}`)[0].classList.add("btnActive");
-    }
-    document.querySelector(`.ep${lastep}`).click();
-    changeList(Math.floor(lastep/100));
-  }
-
-}

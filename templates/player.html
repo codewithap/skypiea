@@ -28,7 +28,7 @@
 display: none;
 }
 
-html, body{
+body{
 width: 100%;
 height: 100%;
 }
@@ -71,6 +71,16 @@ async function init() {
     $('.shaka-back-to-overflow-button .material-icons-round').html('arrow_back_ios_new');
 }
 document.addEventListener('shaka-ui-loaded', init);
+
+////////////////////////////////
+let html_ = document.querySelector("html");
+addEventListener('resize', () => {
+      let video = document.querySelector(".video .currentAnime");
+      let w = video.offsetWidth;
+      video.style.height = `${w/1.8}px`;
+    });
+
+
   </script>
 </body>
 </html>

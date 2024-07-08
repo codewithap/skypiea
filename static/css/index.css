@@ -605,11 +605,12 @@ footer p {
   width: 100%;
   background-color: #111020cf;
   min-height: 220px;
+  overflow: hidden;
 }
 
 .epis_btns{
   min-height: 40px;
-  max-height: calc(100% - 40px);
+  max-height: calc(100% - 120px);
 }
 
 .btnActive, .epBtn:hover{
@@ -641,6 +642,8 @@ footer p {
   border-radius: 8px;
    /* border: 2px solid #2e2e2e; */
    transition: 200ms;
+   position: relative;
+   top: 0;
 }
 
 .epis .relatedAnimes i{
