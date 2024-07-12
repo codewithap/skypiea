@@ -350,13 +350,21 @@ function getInfo(malid, name2){
       }
     }
 
+    let btnIcon = `<i style="font-size: 1.7rem" class="bi bi-bookmark-plus-fill"></i>`
+    let isInMylist = localStorage.getItem(`${malid}_inML`);
+    if(isInMylist != null){
+      btnIcon = `<i style="font-size: 1.7rem; color: #20c997" class="bi bi-bookmark-check-fill"></i>`;
+    }    
+
     animeContainer[0].innerHTML = `
     <div class="anisContent">
 
       <div class="title">
         <img src="${data["imgs"]["webp"]["large"]}">
         <h1>${data["info"]["english"]}</h1>
-        <div><button onclick='document.querySelectorAll(".navigation .otherButtons button")[1].click()'>Watch Now</button> <button class="addToMyList" onclick="addToMyList(${malid}, '${name2}', '${data.imgs.webp.large}')"><span class="material-symbols-rounded">add</span></button></div>
+        <div><button onclick='document.querySelectorAll(".navigation .otherButtons button")[1].click()'>Watch Now</button> <button class="addToMyList" onclick="addToMyList(${malid}, '${name2.replaceAll("'",'').replaceAll('"', "")}', '${data.imgs.webp.large}')">
+        ${btnIcon}
+        </button></div>
       </div>
 
       <div class="anisInfo">
@@ -374,6 +382,7 @@ function getInfo(malid, name2){
     <br>
     </div>
     `;
+    sessionStorage.setItem("img_url", data.imgs.webp.large);
     sessionStorage.setItem("relationsHtml", relationsHtml);
     scrollX(document.querySelector(".otherAniInfo"));
 
@@ -387,7 +396,6 @@ function getInfo(malid, name2){
       } else {
         spotify = `<a class="spotify linkDisabled" target="_blank" href="#"><i class="bi bi-spotify"></i></a> `;
       }
-
       if(openingSongs[i]["youtube"] != ""){
         youtube = `<a class="youtube" target="_blank" href="${openingSongs[i]["youtube"]}"><i class="bi bi-youtube"></i></a>`;
       } else {
@@ -473,8 +481,8 @@ var epRangeOpened = false;
 var epLangOpened = false;
 async function getAnimeEpis(name1, name2){
   loading(true);
+  addToContinueWatching(sessionStorage.getItem("mal_id"), name2.replaceAll("'",'').replaceAll('"', ""), sessionStorage.getItem("img_url"));
   try {
-    
     let response = await fetch(`https://aniapi-eight.vercel.app/api/search/gogo?q=${name1}`);
     let data = await response.json();
     let response2, data2;
@@ -740,5 +748,3 @@ function getEpisM3u8(gogoEpId, i){
     console.error(error)
   });
 }
-
-
