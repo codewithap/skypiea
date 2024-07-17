@@ -288,7 +288,7 @@ footer p {
   position: fixed;
   top: 0;
   padding: 80px 0 0 0;
-  background-color: #101019e9;
+  background-color: #101019fb;
   z-index: 999;
   color: white;
   overflow: auto;
@@ -463,6 +463,9 @@ footer p {
   border-radius: 8px;
   outline: 4px solid #00000034;
 }
+
+
+
 
 /* .otherAniInfo::-webkit-scrollbar{
   display: block;
@@ -771,6 +774,27 @@ footer p {
   height: 200px;
 }
 
+.ext_links{
+  padding: 10px;
+  margin: 0 10px;
+  background-color: #1e242ebe;
+  border-radius: 8px;
+}
+
+.ext_links h3{
+  margin-bottom: 8px;
+}
+
+.ext_links a{
+  padding: 4px 5px;
+  color: skyblue;
+}
+
+.ext_links a:hover{
+  color: rgb(49, 112, 220);
+  transition-duration: 100ms;
+}
+
 .relatedAnime img{
   width: 60px;
   height: 80px;
@@ -826,6 +850,10 @@ footer p {
 }
 
 @media (min-width: 700px) {
+  .wxyz{
+    width: calc(100% - 300px);
+  }
+
   .charactersCard img{
     width: 135px;
     height: 190px;

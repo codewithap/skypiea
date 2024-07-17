@@ -52,17 +52,12 @@ getFeaturedAnimes(movie, "movie", 5)
 getFeaturedAnimes(tv, "tv", 5)
 
 //////   scroll X  ///////
-let tranding = document.querySelector(".xyz .cards");
-scrollX(tranding);
-let popular = document.querySelector(".popular .cards");
-scrollX(popular);
+scrollX(document.querySelector(".xyz .cards"));
+scrollX(document.querySelector(".popular .cards"));
 scrollX(document.querySelector(".myList .cards"));
-
+scrollX(document.querySelector(".continueWatching .cards"));
 
 
 function strip(string) {
   return string.replace(/^\s+|\s+$/g, '');
 }
-
-
-

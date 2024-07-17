@@ -325,8 +325,17 @@ function getInfo(malid, name2){
       else if(key == "ranked"){
         infoHtml += `<div class="elements"> <strong style="text-transform: capitalize;">${key}</strong> <br><span>${(info[key]).split("\n")[0]}</span> </div>`;
       }
-      else if(key == "producers"){
-        infoHtml += `<div class="elements"> <strong style="text-transform: capitalize;">${key}</strong> <br><span>${(info[key]).trim()}</span> </div>`;
+      else if(key == "genres" || key == "demographic" || key == "themes"){
+        let inputString = info[key];
+        let splitWords = inputString.split(",");
+        console.log(splitWords)
+        let filteredWords = "";
+        for (let word of splitWords){
+          let z = word.replaceAll(" ","");
+          let midPoint = Math.ceil(z.length / 2);
+          filteredWords += " "+z.slice(0, midPoint) + ",";
+        } 
+        infoHtml += `<div class="elements"> <strong style="text-transform: capitalize;">${key}</strong> <br><span>${filteredWords.replace(/,$/, "")}</span> </div>`;
       }
       else{
         infoHtml += `<div class="elements"> <strong style="text-transform: capitalize;">${key}</strong> <br><span>${strip(info[key])}</span> </div>`;
@@ -354,7 +363,17 @@ function getInfo(malid, name2){
     let isInMylist = localStorage.getItem(`${malid}_inML`);
     if(isInMylist != null){
       btnIcon = `<i style="font-size: 1.7rem; color: #20c997" class="bi bi-bookmark-check-fill"></i>`;
-    }    
+    }
+
+    let extLinkHtml = "";
+    let linksHtml = data["external_links"];
+    for(let link of linksHtml){
+      if(link.data != "#"){
+        extLinkHtml += `
+          <a target="_blank" href="${link.data}">${link.name}</a>
+        `;
+      }
+    }
 
     animeContainer[0].innerHTML = `
     <div class="anisContent">
@@ -374,12 +393,19 @@ function getInfo(malid, name2){
     </div>
 
     <div class="anisItems">
-    <div class="otherAniInfo">${infoHtml}</div>
-    <br>
-    <div class="desc">${data["description"]}</div>
-    <div class="relations">${relationsHtml}
-    </div>
-    <br>
+      <div class="otherAniInfo">${infoHtml}</div>
+      <br>
+      <div class="wxyz">
+        <div class="desc">${data["description"]}</div>
+        <div class="relations">${relationsHtml}</div> <br>
+        <div class="ext_links">
+          <h3> External Links</h3>
+          <div class="links">
+            ${extLinkHtml}
+          </div>
+        </div>
+      </div>
+      <br>
     </div>
     `;
     sessionStorage.setItem("img_url", data.imgs.webp.large);

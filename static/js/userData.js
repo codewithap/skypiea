@@ -65,7 +65,7 @@ function addToMyList(mal_id, name, img){
 function loadMyListData(){
   let html = "";
   let myList = document.querySelector(".myList .cards");
-  let data = JSON.parse(localStorage.getItem("mylist"));
+  let data = JSON.parse(localStorage.getItem("mylist")).reverse();
   for(let x of data){
     html += `
     <div onclick='animeInfo(${x["mal_id"]}, \`${(  x['name']  ).replaceAll('"','')}\`)' class="card fx" style="transform: translateX(1px)">
@@ -121,7 +121,7 @@ function addToContinueWatching(mal_id, name, img){
 function loadContinueWatchingData(){
   let html = "";
   let continueWatching = document.querySelector(".continueWatching .cards");
-  let data = JSON.parse(localStorage.getItem("continueWatching"));
+  let data = JSON.parse(localStorage.getItem("continueWatching")).reverse();
   for(let x of data){
     html += `
     <div onclick='animeInfo(${x["mal_id"]}, \`${(  x['name']  ).replaceAll('"','')}\`)' class="card fx" style="transform: translateX(1px)">
