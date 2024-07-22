@@ -1,4 +1,5 @@
 //////////   Register User    ///////////////
+sessionStorage.setItem("navOpened", false);
 let user_registered = localStorage.getItem("userRegistered");
 if(user_registered == null){
   localStorage.setItem("userRegistered", true);
@@ -119,6 +120,7 @@ function addToContinueWatching(mal_id, name, img){
 }
 
 function loadContinueWatchingData(){
+  
   let html = "";
   let continueWatching = document.querySelector(".continueWatching .cards");
   let data = JSON.parse(localStorage.getItem("continueWatching")).reverse();

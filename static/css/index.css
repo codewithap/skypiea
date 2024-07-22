@@ -341,7 +341,7 @@ footer p {
 }
 
 .container{
-  height: calc(100%);
+  /* height: calc(100%); */
   display: flex;
   padding: 46px 5px 20px 5px;
   overflow: hidden visible;

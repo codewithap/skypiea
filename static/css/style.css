@@ -531,9 +531,85 @@ html {
   display: none;
 }
 
+.allAnimeList{
+  display: none;
+}
 
+.allAnimeList .list{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  justify-items: center;
+  grid-gap: 15px;
+  margin: auto;
+}
 
+.allAnimeListActive{
+  display: block;
+  height: calc(100% - 1px);
+  background-color: #101019f4;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 990;
+  overflow: auto;
+  color: #fff;
+  padding: 10px;
+  padding-top: 80px;
+}
 
+.closebtn{
+  position: fixed;
+  top: 85px;
+  right: 10px;
+  z-index: 980;
+}
+
+.closeList{
+  color: #fff;
+  background-color: crimson;
+  text-shadow: 1px 1px 0 #FFF, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: none;
+  margin-top: 5px;
+  font-size: 1.4rem;
+}
+
+.closeList:hover{
+  background-color: rgb(255, 51, 0);
+  color: #78ff17;
+  text-shadow: 1px 1px 0 #78ff17, -1px -1px 0 #78ff17, 1px -1px 0 #78ff17, -1px 1px 0 #78ff17;
+  transition-duration: 150ms;
+}
+
+.closeList i{
+  font-weight: bolder;
+  font-size: 1.5rem;
+}
+
+.pagination{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.pagination button{
+  font-size: 1.35rem;
+  background-color: limegreen;
+  color: #101019;
+  padding: 5px 15px;
+  border-radius: 8px;
+  border: none;
+  margin: 30px 5px;
+  font-weight: bold;
+}
+
+.pagination button:hover{
+  color: #ffffff;
+  background-color: rgb(0, 199, 0);
+  transition-duration: 100ms;
+}
 
 
 @media (min-width: 520px) {

@@ -70,11 +70,13 @@ let opened = false;
 function openCloseNav() {
   if (opened) {
     opened = false;
+    sessionStorage.setItem("navOpened", false);
     sidebar_menu.style.width = "0";
     slideBarOpenBG.style.display = "none";
   }
   else if (!opened) {
     opened = true;
+    sessionStorage.setItem("navOpened", true);
     sidebar_menu.style.width = "300px";
     slideBarOpenBG.style.display = "block";
   }
@@ -228,6 +230,8 @@ async function searchAnime(){
     }
     searchContainer.innerHTML = html;
     loading(false);
+    let x = document.querySelector('.allAnimeListActive');
+    x.classList.remove('allAnimeListActive');
   } catch (error){
     console.error(error);
     loading(false);
@@ -271,6 +275,7 @@ function nextCotainer(x){
 }
 
 function animeInfo(malId, name2){
+  
   animeContainer[0].innerHTML = "";
   animeContainer[3].innerHTML = "";
   watchAnimeBox.style.display = "block";
@@ -430,7 +435,7 @@ function getInfo(malid, name2){
 
       animeContainer[3].innerHTML += `
       <div class="songsCard">
-        <div class="name">${openingSongs[i]["name"].replace(`${i+1}:`,"")}</div>
+        <div class="name">${openingSongs[i]["name"].substring(3)}</div>
         <div class="links">${spotify} ${youtube}</div>
       </div>
     `;
@@ -451,12 +456,13 @@ function getInfo(malid, name2){
 
       animeContainer[3].innerHTML += `
       <div class="songsCard">
-        <div class="name">${endingSongs[i]["name"].replace(`${i+1}:`,"")}</div>
+        <div class="name">${endingSongs[i]["name"].substring(3)}</div>
         <div class="links">${spotify} ${youtube}</div>
       </div>
     `;
     }
     loading(false);
+    
   }).catch(error => {
     console.error(error);
     loading(false)
