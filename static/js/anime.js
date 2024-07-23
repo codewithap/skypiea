@@ -619,8 +619,8 @@ async function getAnimeEpis(name1, name2){
       <div class="currentAnime">
         <div class="m3u8">
       
-        </div><br>
-        <p> You Are Watching <b></b> </p>
+        </div>
+        <p> You Are Watching <b></b> </p> <br>
       </div>
       <div class="epis">
         ${RAhtml}
@@ -649,17 +649,11 @@ async function getAnimeEpis(name1, name2){
     `;
 
     if(z == true){document.querySelector(".selectedLangValue b").innerHTML = "DUB";}
-    addEventListener('resize', () => {
-      let video = document.querySelector(".video .currentAnime");
-      let w = video.offsetWidth;
-      video.style.height = `${w/1.8 + 60}px`;
-    });
-    let video = document.querySelector(".video .currentAnime");
-    let w = video.offsetWidth;
-    video.style.height = `${w/1.8 + 60}px`;
+    
     let epNo = epis.length;
     let epPageNo = (Math.floor(epNo/100) + 1);
-
+    let video = document.querySelector(".video .currentAnime");
+    let w = video.offsetWidth;
     let pageOption = document.querySelector('.epis .controls .epRange .rangeList');
     let langOptions = document.querySelector('.epis .controls .epLang .langList');
     
@@ -774,7 +768,13 @@ function getEpisM3u8(gogoEpId, i){
       <iframe class="m3u8" frameborder="0" src="/play?m3u8=${file1}&m3u8_2=${file2}" style="width: 100%;height: 100%">
         </iframe>`;
         video.innerHTML = html;
-        document.querySelector(".currentAnime b").innerHTML = `Episode ${i + 1}`
+        document.querySelector(".currentAnime b").innerHTML = `Episode ${i + 1}`;
+        addEventListener('resize', () => {
+          let w = document.querySelector(".m3u8").offsetWidth;
+          document.querySelector(".m3u8").style.height = `${w/1.8 + 22}px`;
+        });
+        let w = video.offsetWidth;
+        video.style.height = `${w/1.8 + 22}px`;
     }).catch(error => {
       console.error(error)
     });
