@@ -64,6 +64,7 @@ function strip(string) {
 
 async function showAll(type, page){
   loading(true);
+  document.querySelector(".pagination").style.display = "flex";
   if(sessionStorage.getItem("navOpened") == 'true'){
     document.querySelector(".close_menu button").click();
   }
@@ -96,14 +97,6 @@ async function showAll(type, page){
   loading(false);
 }
 
-/*
-"items": [],
-"pagination": {
-"next_page": true,
-"page": "1",
-"prev_page": false
-}
-*/
 function pagination(obj, type){
   let pages = document.querySelector(".pagination");
   let html = "";
@@ -134,6 +127,8 @@ function showAllSavedAnime(){
     </div>
   <div class="card-title">${anime.name}</div>
 </div>`;
+
   }
+  document.querySelector(".pagination").style.display = "none";
   list.innerHTML = html;
 }

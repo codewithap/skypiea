@@ -380,19 +380,21 @@ function getInfo(malid, name2){
       }
     }
 
+    let title__ = data["info"]["english"] == undefined ? data.title : data["info"]["english"];
+    console.log(title__)
     animeContainer[0].innerHTML = `
     <div class="anisContent">
 
       <div class="title">
         <img src="${data["imgs"]["webp"]["large"]}">
-        <h1>${data["info"]["english"]}</h1>
+        <h1>${title__}</h1>
         <div><button onclick='document.querySelectorAll(".navigation .otherButtons button")[1].click()'>Watch Now</button> <button class="addToMyList" onclick="addToMyList(${malid}, '${name2.replaceAll("'",'').replaceAll('"', "")}', '${data.imgs.webp.large}')">
         ${btnIcon}
         </button></div>
       </div>
 
       <div class="anisInfo">
-        <h1>${data["info"]["english"]}</h1>
+        <h1>${title__}</h1>
         <p>${data["description"]}</p>
       </div>
     </div>
